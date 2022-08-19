@@ -9,6 +9,7 @@ int main() {
         try {
             IrcServer server;
             server.run();
+            state = server.state();
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
             return (1);
