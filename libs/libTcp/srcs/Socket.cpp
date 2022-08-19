@@ -1,10 +1,3 @@
-#include <unistd.h>
-#include <fcntl.h>
-#include <cstring>
-#include <stdexcept>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
 #include "Socket.hpp"
 
 namespace TCP {

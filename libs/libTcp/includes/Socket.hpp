@@ -1,4 +1,10 @@
 #include <sys/socket.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <cstring>
+#include <stdexcept>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 namespace TCP {
     class Socket {
