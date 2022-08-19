@@ -16,19 +16,19 @@ OBJ			:= $(SRCS:srcs/%.cpp=$(BUILD_DIR)/%.o)
 
 
 $(NAME): $(OBJ)
-	@make -C $(LIBTCP_DIR) > /dev/null 2>&1
+	make -C $(LIBTCP_DIR)
 	@$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 
 all: $(NAME) $(CERT)
 .PHONY: all
 
 clean:
-	@make -C $(LIBTCP_DIR) clean > /dev/null 2>&1
+	make -C $(LIBTCP_DIR) clean
 	@rm -rf $(BUILD_DIR)
 .PHONY: clean
 
 fclean: clean
-	@make -C $(LIBTCP_DIR) fclean > /dev/null 2>&1
+	make -C $(LIBTCP_DIR) fclean
 	@rm -rf $(NAME) $(BIN_DIR)
 .PHONY: fclean
 
@@ -37,6 +37,6 @@ re: fclean all
 
 $(BUILD_DIR)/%.o: srcs/%.cpp
 	@mkdir -p $(@D)
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 -include $(OBJ:.o=.d)
