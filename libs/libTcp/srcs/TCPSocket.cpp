@@ -61,7 +61,7 @@ namespace TCP {
         return (true);
     }
 
-    void                TCPSocket::write(std::string &data) {
+    void                TCPSocket::write(const std::string &data) {
         _writeBuffer += data + '\n';
     }
 

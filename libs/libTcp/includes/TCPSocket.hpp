@@ -27,7 +27,7 @@ namespace TCP {
             bool                canRead();
 
             bool                read(std::string &data);
-            void                write(std::string &data);
+            void                write(const std::string &data);
 
             virtual bool		fill();
             virtual void		flush();
@@ -51,5 +51,9 @@ namespace TCP {
         private:
             TCPSocket(const TCPSocket &other);
             TCPSocket &operator=(const TCPSocket &other);
+
+            friend class TCPListener;
+            friend class TCPServer;
+
     };
 }
