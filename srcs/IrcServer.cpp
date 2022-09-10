@@ -67,18 +67,14 @@ void IrcServer::flushZombies() {
 }
 
 void                IrcServer::disconnect(TCP::TCPSocket *socket, const std::string &reason) throw() {
-    (void)socket;
-    (void)reason;
     TCP::BasicConnection *c = _network.getUserBySocket(socket);
     std::cout << c->socket()->fd() << std::endl;
 	disconnect(*static_cast<User *>(c), reason);
 }
 
-void                IrcServer::disconnect(User &u, const std::string &reason, bool notifyUser) throw() {
-    (void)u;
-    (void)reason;
+void                IrcServer::disconnect(User &user, const std::string &reason, bool notifyUser) throw() {
     (void)notifyUser;
-    std::cout << "Disconnected: " << u.socket()->ip() << " fd: " << u.socket()->fd() << "\nReason: " << reason << std::endl;
-    _network.remove(&u);
-	_network.newZombie(&u);
+    std::cout << "Disconnected: " << user.socket()->ip() << " fd: " << user.socket()->fd() << "\nReason: " << reason << std::endl;
+    _network.remove(&user);
+	_network.newZombie(&user);
 }
