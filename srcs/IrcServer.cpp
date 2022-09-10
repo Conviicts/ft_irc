@@ -1,6 +1,9 @@
 #include "IrcServer.hpp"
 
-IrcServer::IrcServer() : _state(STARTED), _init(false) { }
+IrcServer::IrcServer() : _state(STARTED), _init(false) {
+	_userCommands["PASS\n"] = &IrcServer::PASS;
+
+}
 
 IrcServer::~IrcServer() { }
 
@@ -42,7 +45,7 @@ void                IrcServer::run() {
                     }
                     if (line.empty())
                         continue ;
-                    std::cout << "Received: " << line << std::endl;
+                    execute(_network.getUserBySocket(socket), line);
                 }
             } catch (std::exception &e) {
                 std::cerr << e.what() << std::endl;
@@ -53,7 +56,20 @@ void                IrcServer::run() {
     }
 }
 
-void IrcServer::flushZombies() {
+void            IrcServer::execute(TCP::BasicConnection *c, const std::string &message) {
+    (void)c;
+    (void)message;
+	User &user = *static_cast<User*>(c);
+	userCommands::const_iterator i = _userCommands.find(message);
+	if (i == _userCommands.end()) {
+		std::cout << "unknow command: [" << message << "]" << std::endl;
+        return ;
+    }
+	int status = (this->*(i->second))(user, message);
+    std::cout << "status: " << status << std::endl;
+}
+
+void            IrcServer::flushZombies() {
 	TCP::BasicConnection *z;
 
 	while ((z = _network.nextZombie()))
@@ -77,4 +93,10 @@ void                IrcServer::disconnect(User &user, const std::string &reason,
     std::cout << "Disconnected: " << user.socket()->ip() << " fd: " << user.socket()->fd() << "\nReason: " << reason << std::endl;
     _network.remove(&user);
 	_network.newZombie(&user);
+}
+
+int IrcServer::PASS(User &u, const std::string &m) {
+	(void)u;
+	(void)m;
+    return 1;
 }
