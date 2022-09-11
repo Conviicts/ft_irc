@@ -1,7 +1,7 @@
 #include "IrcServer.hpp"
 
 IrcServer::IrcServer() : _state(STARTED), _init(false) {
-	_userCommands["PASS\n"] = &IrcServer::PASS;
+	_userCommands["PASS"] = &IrcServer::PASS;
 
 }
 
@@ -45,7 +45,8 @@ void                IrcServer::run() {
                     }
                     if (line.empty())
                         continue ;
-                    execute(_network.getUserBySocket(socket), line);
+                    Message msg = Message(line);
+                    execute(_network.getUserBySocket(socket), msg);
                 }
             } catch (std::exception &e) {
                 std::cerr << e.what() << std::endl;
@@ -56,13 +57,12 @@ void                IrcServer::run() {
     }
 }
 
-void            IrcServer::execute(TCP::BasicConnection *c, const std::string &message) {
-    (void)c;
-    (void)message;
+void            IrcServer::execute(TCP::BasicConnection *c, Message message) {
 	User &user = *static_cast<User*>(c);
-	userCommands::const_iterator i = _userCommands.find(message);
+    std::cout << "(" << message.command() << ")" << std::endl;
+	userCommands::const_iterator i = _userCommands.find(message.command());
 	if (i == _userCommands.end()) {
-		std::cout << "unknow command: [" << message << "]" << std::endl;
+		std::cout << "unknow command: [" << message.command() << "]" << std::endl;
         return ;
     }
 	int status = (this->*(i->second))(user, message);
@@ -95,8 +95,19 @@ void                IrcServer::disconnect(User &user, const std::string &reason,
 	_network.newZombie(&user);
 }
 
-int IrcServer::PASS(User &u, const std::string &m) {
-	(void)u;
-	(void)m;
-    return 1;
+int IrcServer::PASS(User &u, Message msg) {
+    std::cout << msg.args()[0] << std::endl;
+	if (u.isRegistered()) {
+        u.write(":You may not reregister");
+        return (0);
+    }
+    if (msg.args().size() != 1) {
+        u.write(":You may not reregister");
+        return (0);
+    }
+    if (msg.args()[0] != "123456")
+        u.setState(0);
+    else
+        u.setState(1);
+    return (1);
 }
