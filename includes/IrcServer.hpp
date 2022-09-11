@@ -18,6 +18,8 @@ class IrcServer {
         };
 
         int             PASS(User &u, Message msg);
+        int             NICK(User &u, Message msg);
+        int             USER(User &u, Message msg);
 
         void            listen(const std::string &port, size_t maxQueueLen = 5);
         void            run(); // Run the server
