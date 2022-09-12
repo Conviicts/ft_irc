@@ -43,7 +43,11 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 		case 431:
 			return target + ":No nickname given";
 		case 461:
-			return target + ": " + args[0] + " :Not enough parameters";
+			return target + ": " + args[0] + ":Not enough parameters";
+		case 462:
+			return target + ":You may not reregister";
+		case 464:
+			return target + ":Password incorrect";
 		default:
 			return std::string(args[0]);
 	}
