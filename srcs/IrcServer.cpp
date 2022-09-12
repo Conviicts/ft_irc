@@ -4,6 +4,7 @@ IrcServer::IrcServer() : _state(STARTED), _init(false) {
 	_userCommands["PASS"] = &IrcServer::PASS;
 	_userCommands["NICK"] = &IrcServer::NICK;
 	_userCommands["USER"] = &IrcServer::USER;
+	_userCommands["QUIT"] = &IrcServer::QUIT;
 
 }
 
@@ -68,15 +69,14 @@ void            IrcServer::execute(TCP::BasicConnection *c, Message message) {
 		std::cout << ">\targs size: [" << message.args().size() << "]" << std::endl;
         return ;
     }
-	int status = (this->*(i->second))(user, message);
-    std::cout << "status: " << status << std::endl;
+	(this->*(i->second))(user, message);
+    // std::cout << "status: " << status << std::endl;
 }
 
 void            IrcServer::flushZombies() {
 	TCP::BasicConnection *z;
 
-	while ((z = _network.nextZombie()))
-	{
+	while ((z = _network.nextZombie())) {
 		try {
             z->socket()->flush();
         } catch(std::exception &e) {}
@@ -99,33 +99,41 @@ void                IrcServer::disconnect(User &user, const std::string &reason,
 }
 
 int IrcServer::PASS(User &u, Message msg) {
-    (void)msg;
-    // if (msg.args().size() != 2)
-    //     return u.reply(u, 461, msg.args());
+    if (msg.args().size() != 1)
+        return u.reply(u, 461, msg.args());
+    if (msg.args()[0] != "test")
+        return u.reply(u, 464, msg.args());
     u.setState(1);
     return (1);
 }
 
 int IrcServer::NICK(User &u, Message msg) {
-    u.setState(1); //TODO: remove !!!
     if (!msg.args().size())
         return u.reply(u, 431, msg.args());
     if (msg.args().size() != 1)
         return u.reply(u, 461, msg.args());
+    if (u.state() != 1)
+        return u.reply(u, 464, msg.args());
     u.setNickname(msg.args()[0]);
-    std::cout << "nickname: " << u.nickname() << std::endl;
     return (1);
 }
 
 int IrcServer::USER(User &u, Message msg) {
-    std::cout << msg.args().size() << std::endl;
     if (msg.args().size() != 4)
         return u.reply(u, 461, msg.args());
     if (u.state() != 1)
         return u.reply(u, 462, std::vector<std::string>());
     u.setUsername(msg.args()[0]);
     u.setRealname(msg.args()[3]);
-    return u.reply(u, 0, msg.args());
+
+    return (1);
+}
+
+int IrcServer::QUIT(User &u, Message msg) {
+    if (u.state() != 2)
+        disconnect(u, "QUIT", true);
+    else
+        disconnect(u, msg.args()[0], false);
 
     return (1);
 }
