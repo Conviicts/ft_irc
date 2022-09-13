@@ -8,12 +8,14 @@
 #include "TCPServer.hpp"
 #include "BasicConnection.hpp"
 #include "User.hpp"
+#include "Channel.hpp"
 
 class Network {
     public:
         typedef std::map<TCP::TCPSocket *, TCP::BasicConnection *>	Connection;
         typedef std::map<std::string, User *>	                    Users;
 	    typedef std::list<TCP::BasicConnection *>				    Zombies;
+	    typedef std::vector<Channel *>				                Channels;
 
 
 
@@ -24,6 +26,7 @@ class Network {
 	    void				    remove(User *user) throw();
         void				    clear() throw();
 	    TCP::BasicConnection    *getUserBySocket(TCP::TCPSocket *socket);
+        User                    *getByNickname(const std::string &name);
 
         const Connection  	    &connections() const;
 	    const Users  		    &users() const;
@@ -31,13 +34,14 @@ class Network {
         void                    newZombie(TCP::BasicConnection *z);
         TCP::BasicConnection    *nextZombie();
 
-
+        Channel                 *getChannel(const std::string &name);
+        Channel                 *createChannel(const std::string &name, const std::string &password, User *admin);
 
     private:
         Connection      _connections;
         Users            _users;
 	    Zombies 		_zombies;
-
+        Channels        _channels;
 
         Network(const Network &);
         Network &operator=(const Network &);
