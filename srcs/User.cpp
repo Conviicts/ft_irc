@@ -32,6 +32,15 @@ int                     User::reply(User &u, int code, std::vector<std::string> 
 	return (0);
 }
 
+void                    User::welcome(User &u) {
+	std::cout << _state << " " << _username << " " << _nickname << " " << _realname << std::endl;
+	if (_state != 1 || _username.empty() || _realname.empty() || _nickname.empty())
+		return ;
+	_state = 2;
+	reply(u, 001, std::vector<std::string>());
+	std::cout << u.socket()->host() << " is not known as " << _nickname << std::endl;
+}
+
 std::string             User::getResponse(User &u, int code, std::vector<std::string> args) {
 	std::string target;
 	if (u.state() == 0 || u.state() == 1)
@@ -40,8 +49,14 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 		target = u.nickname();
 	target += " ";
 	switch (code) {
+		case 001:
+			return target + ":Welcome " + target + " to the ft_irc network";
+		case 401:
+			return target + ": " + args[0] + ":No such nick/channel";
 		case 431:
 			return target + ":No nickname given";
+		case 433:
+			return target + ":Nickname is already in use";
 		case 461:
 			return target + ": " + args[0] + ":Not enough parameters";
 		case 462:
@@ -52,3 +67,12 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 			return std::string(args[0]);
 	}
 }
+
+void                    User::joinChannel(User &u, Channel *channel) {
+	channel->addUser(this);
+	_channel = channel;
+
+	channel->broadcast(":" + u.nickname() + " JOIN :" + channel->name());
+	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
+}
+
