@@ -2,6 +2,9 @@
 #include <vector>
 
 #include "BasicConnection.hpp"
+#include "Channel.hpp"
+
+class Channel;
 
 class User : public TCP::BasicConnection {
     public:
@@ -24,8 +27,12 @@ class User : public TCP::BasicConnection {
 
         std::string             getResponse(User &u, int code, std::vector<std::string> args);
         int                     reply(User &u, int code, std::vector<std::string> args);
+        void                    welcome(User &u);
+
+        void                    joinChannel(User &u, Channel *channel);
 
     private:
+        Channel                 *_channel;
         std::string             _nickname;
         std::string             _username;
         std::string             _realname;
@@ -33,5 +40,5 @@ class User : public TCP::BasicConnection {
         int                     _state;
 
     protected:
-        time_t          _idle;
+        time_t                  _idle;
 };

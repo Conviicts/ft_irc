@@ -22,6 +22,9 @@ class IrcServer {
         int             USER(User &u, Message msg);
         int             QUIT(User &u, Message msg);
 
+        int             PRIVMSG(User &u, Message msg);
+        int             JOIN(User &u, Message msg);
+
         void            listen(const std::string &port, size_t maxQueueLen = 5);
         void            run(); // Run the server
         
