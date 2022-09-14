@@ -5,6 +5,7 @@ User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
 	_registered(false),
 	_state(0),
+	_maskMode(0),
 	_idle(time(NULL))
 {}
 
@@ -22,6 +23,10 @@ void 					User::setRealname(const std::string &realname) { _realname = realname;
 
 
 bool                    User::isRegistered() const { return (_registered); }
+
+std::string 			User::getPrefix() const {
+	return _nickname + (_username.empty() ? "" : "!" + _username) + (socket()->host().empty() ? "" : "@" + socket()->host());
+}
 
 int                     User::state() const { return (_state); }
 void					User::setState(int state) { _state = state; }
@@ -46,13 +51,15 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 	if (u.state() == 0 || u.state() == 1)
 		target = "*";
 	else
-		target = u.nickname();
+		target = u.getPrefix();
 	target += " ";
 	switch (code) {
 		case 001:
 			return target + ":Welcome " + target + " to the ft_irc network";
 		case 401:
 			return target + ": " + args[0] + ":No such nick/channel";
+		case 405:
+			return target + ":You have joined too many channels";
 		case 431:
 			return target + ":No nickname given";
 		case 433:
@@ -63,10 +70,16 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 			return target + ":You may not reregister";
 		case 464:
 			return target + ":Password incorrect";
+		case 471:
+			return target + ":Cannot join channel (+l)";
+		case 475:
+			return target + ":Cannot join channel (+k)";
 		default:
-			return std::string(args[0]);
+			return std::string("");
 	}
 }
+
+Channel					*User::getChannel() const { return _channel; };
 
 void                    User::joinChannel(User &u, Channel *channel) {
 	channel->addUser(this);
@@ -76,3 +89,6 @@ void                    User::joinChannel(User &u, Channel *channel) {
 	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
 }
 
+void					User::setChannel(Channel *channel) { 
+	_channel = channel;
+};
