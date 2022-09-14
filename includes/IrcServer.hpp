@@ -8,7 +8,7 @@
 
 class IrcServer {
     public:
-        IrcServer();
+        IrcServer(char **av);
         ~IrcServer();
 
         enum State {
@@ -24,6 +24,8 @@ class IrcServer {
 
         int             PRIVMSG(User &u, Message msg);
         int             JOIN(User &u, Message msg);
+        int             OPER(User &u, Message msg);
+        int             MODE(User &u, Message msg);
 
         void            listen(const std::string &port, size_t maxQueueLen = 5);
         void            run(); // Run the server
@@ -34,6 +36,9 @@ class IrcServer {
     private:
 	    typedef int (IrcServer::*UserCommandPointer)(User &, Message);
 	    typedef std::map<std::string, UserCommandPointer> userCommands;
+
+        std::string     _port;
+        std::string     _password;
 
         State           _state; // Current state of the server
         bool            _init; // True if the server is initialized

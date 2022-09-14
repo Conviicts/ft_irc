@@ -1,7 +1,12 @@
 #include "IrcServer.hpp"
 #include "Channel.hpp"
 
-IrcServer::IrcServer() : _state(STARTED), _init(false) {
+IrcServer::IrcServer(char **av) : 
+    _port(av[1]),
+    _password(av[2]),
+    _state(STARTED),
+    _init(false)
+{
 	_userCommands["PASS"] = &IrcServer::PASS;
 	_userCommands["NICK"] = &IrcServer::NICK;
 	_userCommands["USER"] = &IrcServer::USER;
@@ -9,6 +14,9 @@ IrcServer::IrcServer() : _state(STARTED), _init(false) {
 
 	_userCommands["PRIVMSG"] = &IrcServer::PRIVMSG;
 	_userCommands["JOIN"] = &IrcServer::JOIN;
+    _userCommands["OPER"] = &IrcServer::OPER;
+
+    _userCommands["MODE"] = &IrcServer::MODE;
 
 }
 
@@ -17,8 +25,9 @@ IrcServer::~IrcServer() { }
 IrcServer::State    IrcServer::state() const { return _state; }
 
 void                IrcServer::run() {
+    std::cout << "Starting server on port " << _port << std::endl;
     if (!_init) {
-        _server.listen("10001");
+        _server.listen(_port);
         _server.setMaxConnections(20);
         _init = true;
     }
@@ -117,7 +126,7 @@ int IrcServer::PASS(User &u, Message msg) {
     }
     if (msg.args().size() != 1)
         return u.reply(u, 461, msg.args());
-    if (msg.args()[0] != "test") //TODO: check password in config instead of hardcoding it
+    if (msg.args()[0] != _password)
         return u.reply(u, 464, msg.args());
     u.setState(1);
     return (1);
@@ -128,8 +137,6 @@ int IrcServer::NICK(User &u, Message msg) {
         return u.reply(u, 431, msg.args());
     if (_network.getByNickname(msg.args()[0]))
 		return u.reply(u, 433, msg.args());
-    if (u.state() != 1)
-        return u.reply(u, 464, msg.args());
     _network.remove(&u);
     u.setNickname(msg.args()[0]);
 	_network.add(&u);
@@ -173,7 +180,12 @@ int IrcServer::PRIVMSG(User &u, Message msg) {
 		message.append(*it + " ");
 	message = message.at(0) == ':' ? message.substr(1) : message;
     if (target.at(0) == '#') {
-
+        Channel *channel = u.getChannel();
+        if (!channel) {
+            u.reply(u, 403, msg.args());
+            return (0);
+        }
+        channel->broadcast(": " + u.username() + "PRIVMSG " + target + " :" + message);
     }
     User *msg_target = _network.getByNickname(target);
     std::cout << _network.getByNickname(target) << std::endl;
@@ -202,3 +214,11 @@ int IrcServer::JOIN(User &u, Message msg) {
 
     return (1);
 }
+
+// int IrcServer::OPER(User &u, Message msg) {
+//     (void)u;
+//     (void)msg;
+//     std::cout << "Je suis un operator." << std::endl;
+
+//     return (1);
+// }

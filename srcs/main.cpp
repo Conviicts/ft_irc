@@ -2,13 +2,18 @@
 
 #include "IrcServer.hpp"
 
-int main() {
+int main(int ac, char **av) {
+    (void)ac;
+    if (ac != 3) {
+        std::cout << "Usage: ./ircserv <port> <password>" << std::endl;
+        return 1;
+    }
     IrcServer::State state = IrcServer::STARTED;
 
     std::cout << "Server is ready to accept connections." << std::endl;
     while (state != IrcServer::CLOSED) {
         try {
-            IrcServer server;
+            IrcServer server(av);
             server.run();
             state = server.state();
         } catch (std::exception &e) {
