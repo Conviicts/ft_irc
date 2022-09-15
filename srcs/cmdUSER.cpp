@@ -7,9 +7,9 @@ int     IrcServer::USER(User &u, Message msg) {
         return 0;
     }
     if (msg.args().size() != 4)
-        return u.reply(u, 461, msg.args());
+        return u.reply(u, ""); //TODO: 461
     if (u.state() != 1)
-        return u.reply(u, 462, std::vector<std::string>());
+        return u.reply(u, ""); //TODO: 462
     u.setUsername(msg.args()[0]);
     u.setRealname(msg.args()[3]);
     u.welcome(u);

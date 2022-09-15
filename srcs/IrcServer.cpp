@@ -18,7 +18,16 @@ IrcServer::IrcServer(char **av) :
     //TODO: Commands
     _userCommands["OPER"] = &IrcServer::OPER;
     _userCommands["MODE"] = &IrcServer::MODE;
-
+    _userCommands["PART"] = &IrcServer::PART;
+    _userCommands["TOPIC"] = &IrcServer::TOPIC;
+    _userCommands["NAMES"] = &IrcServer::NAMES;
+    _userCommands["LIST"] = &IrcServer::LIST;
+    _userCommands["INVITE"] = &IrcServer::INVITE;
+    _userCommands["KICK"] = &IrcServer::KICK;
+    _userCommands["NOTICE"] = &IrcServer::NOTICE;
+    _userCommands["WHO"] = &IrcServer::WHO;
+    _userCommands["KILL"] = &IrcServer::KILL;
+    _userCommands["PING"] = &IrcServer::PING;
 }
 
 IrcServer::~IrcServer() { }
@@ -120,104 +129,104 @@ void                IrcServer::disconnect(User &user, const std::string &reason,
 	_network.newZombie(&user);
 }
 
-int                 IrcServer::PASS(User &u, Message msg) {
-    if (u.state() != 0) {
-        u.reply(u, 462, msg.args());
-        return 0;
-    }
-    if (msg.args().size() != 1)
-        return u.reply(u, 461, msg.args());
-    if (msg.args()[0] != _password)
-        return u.reply(u, 464, msg.args());
-    u.setState(1);
-    return (1);
-}
+// int                 IrcServer::PASS(User &u, Message msg) {
+//     if (u.state() != 0) {
+//         u.reply(u, 462, msg.args());
+//         return 0;
+//     }
+//     if (msg.args().size() != 1)
+//         return u.reply(u, 461, msg.args());
+//     if (msg.args()[0] != _password)
+//         return u.reply(u, 464, msg.args());
+//     u.setState(1);
+//     return (1);
+// }
 
-int                 IrcServer::NICK(User &u, Message msg) {
-    if (!msg.args().size() || msg.args()[0].empty())
-        return u.reply(u, 431, msg.args());
-    if (_network.getByNickname(msg.args()[0]))
-		return u.reply(u, 433, msg.args());
-    _network.remove(&u);
-    u.setNickname(msg.args()[0]);
-	_network.add(&u);
-    return (1);
-}
+// int                 IrcServer::NICK(User &u, Message msg) {
+//     if (!msg.args().size() || msg.args()[0].empty())
+//         return u.reply(u, 431, msg.args());
+//     if (_network.getByNickname(msg.args()[0]))
+// 		return u.reply(u, 433, msg.args());
+//     _network.remove(&u);
+//     u.setNickname(msg.args()[0]);
+// 	_network.add(&u);
+//     return (1);
+// }
 
-int                 IrcServer::USER(User &u, Message msg) {
-    if (u.state() == 0) {
-        disconnect(u, "bad password", true);
-        return 0;
-    }
-    if (msg.args().size() != 4)
-        return u.reply(u, 461, msg.args());
-    if (u.state() != 1)
-        return u.reply(u, 462, std::vector<std::string>());
-    u.setUsername(msg.args()[0]);
-    u.setRealname(msg.args()[3]);
-    u.welcome(u);
+// int                 IrcServer::USER(User &u, Message msg) {
+//     if (u.state() == 0) {
+//         disconnect(u, "bad password", true);
+//         return 0;
+//     }
+//     if (msg.args().size() != 4)
+//         return u.reply(u, 461, msg.args());
+//     if (u.state() != 1)
+//         return u.reply(u, 462, std::vector<std::string>());
+//     u.setUsername(msg.args()[0]);
+//     u.setRealname(msg.args()[3]);
+//     u.welcome(u);
 
-    return (1);
-}
+//     return (1);
+// }
 
-int                 IrcServer::QUIT(User &u, Message msg) {
-    if (u.state() != 2)
-        disconnect(u, "QUIT", true);
-    else
-        disconnect(u, msg.args()[0], false);
+// int                 IrcServer::QUIT(User &u, Message msg) {
+//     if (u.state() != 2)
+//         disconnect(u, "QUIT", true);
+//     else
+//         disconnect(u, msg.args()[0], false);
 
-    return (1);
-}
+//     return (1);
+// }
 
-int                 IrcServer::PRIVMSG(User &u, Message msg) {
-    if (msg.args().size() < 2)
-        return u.reply(u, 461, msg.args());
-    std::string target = msg.args()[0];
-    std::string message;
+// int                 IrcServer::PRIVMSG(User &u, Message msg) {
+//     if (msg.args().size() < 2)
+//         return u.reply(u, 461, msg.args());
+//     std::string target = msg.args()[0];
+//     std::string message;
 
-    for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
-		message.append(*it + " ");
-	message = message.at(0) == ':' ? message.substr(1) : message;
-    //TODO: can join channel without # ?
-    if (target.at(0) == '#') {
-        Channel *channel = u.getChannel();
-        if (!channel) {
-            u.reply(u, 403, msg.args());
-            return (0);
-        }
-        //TODO: don't receive your own message
-        channel->broadcast(": " + u.username() + " PRIVMSG " + target + " :" + message);
-        return (1);
-    }
-    User *msg_target = _network.getByNickname(target);
-    std::cout << _network.getByNickname(target) << std::endl;
-    if (!msg_target)
-        return u.reply(u, 401, msg.args());
-    msg_target->write(":" + u.nickname() + " PRIVMSG " + target + " :" + message);
-    return (1);
-}
+//     for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
+// 		message.append(*it + " ");
+// 	message = message.at(0) == ':' ? message.substr(1) : message;
+//     //TODO: can join channel without # ?
+//     if (target.at(0) == '#') {
+//         Channel *channel = u.getChannel();
+//         if (!channel) {
+//             u.reply(u, 403, msg.args());
+//             return (0);
+//         }
+//         //TODO: don't receive your own message
+//         channel->broadcast(": " + u.username() + " PRIVMSG " + target + " :" + message);
+//         return (1);
+//     }
+//     User *msg_target = _network.getByNickname(target);
+//     std::cout << _network.getByNickname(target) << std::endl;
+//     if (!msg_target)
+//         return u.reply(u, 401, msg.args());
+//     msg_target->write(":" + u.nickname() + " PRIVMSG " + target + " :" + message);
+//     return (1);
+// }
 
-int                 IrcServer::JOIN(User &u, Message msg) {
-    if (msg.args().size() < 1)
-        return u.reply(u, 461, msg.args());
-    std::string password = msg.args().size() > 1 ? msg.args()[1] : "";
+// int                 IrcServer::JOIN(User &u, Message msg) {
+//     if (msg.args().size() < 1)
+//         return u.reply(u, 461, msg.args());
+//     std::string password = msg.args().size() > 1 ? msg.args()[1] : "";
 
-    Channel *channel = u.getChannel();
-    if (channel) {
-        return u.reply(u, 405, msg.args());
-        return (0);
-    }
-    channel = _network.getChannel(msg.args()[0]);
-    if (!channel)
-        channel = _network.createChannel(msg.args()[0], msg.args()[1], &u);
-    if (channel->maxUsers() > 0 && channel->clientSize() >= channel->maxUsers()){
-		u.reply(u, 471, msg.args());
-		return (0);
-	}
-    if (channel->password() != password) {
-		u.reply(u, 475, msg.args());
-		return (0);
-	}
-    u.joinChannel(u, channel);
-    return (1);
-}
+//     Channel *channel = u.getChannel();
+//     if (channel) {
+//         return u.reply(u, 405, msg.args());
+//         return (0);
+//     }
+//     channel = _network.getChannel(msg.args()[0]);
+//     if (!channel)
+//         channel = _network.createChannel(msg.args()[0], msg.args()[1], &u);
+//     if (channel->maxUsers() > 0 && channel->clientSize() >= channel->maxUsers()){
+// 		u.reply(u, 471, msg.args());
+// 		return (0);
+// 	}
+//     if (channel->password() != password) {
+// 		u.reply(u, 475, msg.args());
+// 		return (0);
+// 	}
+//     u.joinChannel(u, channel);
+//     return (1);
+// }

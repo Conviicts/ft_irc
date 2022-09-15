@@ -4,6 +4,7 @@
 # include <string>
 
 // RPL
+std::string RPL_NOTICE(std::string source, std::string target, std::string message);
 std::string RPL_WELCOME(std::string nick);
 std::string RPL_YOURHOST(std::string nick, std::string servername, std::string version);
 std::string RPL_CREATED(std::string nick, std::string date);
@@ -18,7 +19,7 @@ std::string RPL_NAMREPLY();
 std::string RPL_ENDOFNAMES();
 std::string RPL_MOTDSTART();
 std::string RPL_ENDOFMOTD();
-std::string RPL_YOUROPER();
+std::string RPL_YOUROPER(std::string nick, std::string arg1, std::string arg2);
 std::string RPL_NOTONCHANNEL();
 
 // ERR

@@ -21,11 +21,20 @@ class IrcServer {
         int             NICK(User &u, Message msg);
         int             USER(User &u, Message msg);
         int             QUIT(User &u, Message msg);
-
         int             PRIVMSG(User &u, Message msg);
         int             JOIN(User &u, Message msg);
         int             OPER(User &u, Message msg);
         int             MODE(User &u, Message msg);
+        int             PART(User &u, Message msg);
+        int             TOPIC(User &u, Message msg);
+        int             NAMES(User &u, Message msg);
+        int             LIST(User &u, Message msg);
+        int             INVITE(User &u, Message msg);
+        int             KICK(User &u, Message msg);
+        int             NOTICE(User &u, Message msg);
+        int             WHO(User &u, Message msg);
+        int             KILL(User &u, Message msg);
+        int             PING(User &u, Message msg);
 
         void            listen(const std::string &port, size_t maxQueueLen = 5);
         void            run(); // Run the server

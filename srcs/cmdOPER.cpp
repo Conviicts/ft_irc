@@ -18,13 +18,13 @@
 int IrcServer::OPER(User &u, Message msg) {
 
     if (msg.args().size() != 2) {
-        u.writeErrRpl(ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
+        u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
     }
     if (msg.args()[0] == "admin" && msg.args()[1] == "admin") {
 		u.setOperator(true);
-		u.writeErrRpl(RPL_YOUROPER(u.nickname(), msg.args()[0], msg.args()[1]));
+		u.reply(u, RPL_YOUROPER(u.nickname(), msg.args()[0], msg.args()[1]));
 	}
 	else
-		u.writeErrRpl(ERR_PASSWDMISMATCH(u.nickname()));
+		u.reply(u, ERR_PASSWDMISMATCH(u.nickname()));
     return (1);
 }

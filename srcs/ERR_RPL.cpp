@@ -8,6 +8,10 @@
 /* REPLIES                                                                    */
 /* -------------------------------------------------------------------------- */
 
+std::string RPL_NOTICE(std::string source, std::string target, std::string message) {
+    return ":" + source + " NOTICE " + target + " :" + message;
+}
+
 std::string RPL_WELCOME(std::string nick) {
     return "001 "+ nick +" :Welcome to the Internet Relay Network!";
 }
@@ -64,14 +68,13 @@ std::string RPL_ENDOFMOTD() {
     return "376 ";
 }
 
-std::string RPL_YOUROPER() {
-    return "381 ";
+std::string RPL_YOUROPER(std::string nick, std::string arg1, std::string arg2) {
+    return "381 " + nick + ":Attempt to register as an operator using a username of '" + arg1 + "' and '" + arg2 + "' as the password.";
 }
 
 std::string RPL_NOTONCHANNEL() {
     return "442 ";
 }
-
 
 /* -------------------------------------------------------------------------- */
 /* ERRORS                                                                     */

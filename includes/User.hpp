@@ -39,8 +39,8 @@ class User : public TCP::BasicConnection {
 
         std::string             getPrefix() const;
 
-        std::string             getResponse(User &u, int code, std::vector<std::string> args);
-        int                     reply(User &u, int code, std::vector<std::string> args);
+        std::string             getResponse(User &u, std::string const &reponse);
+        int                     reply(User &u, std::string const &reponse);
         void                    welcome(User &u);
 
         Channel                 *getChannel() const;

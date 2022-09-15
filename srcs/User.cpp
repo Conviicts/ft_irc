@@ -4,8 +4,8 @@
 User::User(TCP::TCPSocket *socket) : 
 	BasicConnection(socket),
 	_registered(false),
-	_state(0),
 	_mode(false),
+	_state(0),
 	_idle(time(NULL))
 {}
 
@@ -35,8 +35,8 @@ int                     User::state() const { return (_state); }
 void					User::setState(int state) { _state = state; }
 
 
-int                     User::reply(User &u, int code, std::vector<std::string> args) {
-	u.write(getResponse(u, code, args));
+int             		User::reply(User &u, std::string const &reponse) {
+	u.write(getResponse(u, reponse));
 	return (0);
 }
 
@@ -45,45 +45,46 @@ void                    User::welcome(User &u) {
 	if (_state != 1 || _username.empty() || _realname.empty() || _nickname.empty())
 		return ;
 	_state = 2;
-	reply(u, 001, std::vector<std::string>());
+	reply(u, RPL_WELCOME(_nickname));
 	std::cout << u.socket()->host() << " is not known as " << _nickname << std::endl;
 }
 
-std::string             User::getResponse(User &u, int code, std::vector<std::string> args) {
+std::string             User::getResponse(User &u, std::string const &reponse) {
 	std::string target;
 	if (u.state() == 0 || u.state() == 1)
 		target = "*";
 	else
 		target = u.getPrefix();
 	target += " ";
-	switch (code) {
-		case 001:
-		return RPL_WELCOME(target);
-			// return target + ":Welcome " + target + " to the ft_irc network";
-		case 401:
-			return ERR_NOSUCHNICK(target, args[0]);
-			// return target + ": " + args[0] + ":No such nick/channel";
-		case 403:
-			return ERR_NOSUCHCHANNEL(target, args[0]);
-		case 405:
-			return target + ":You have joined too many channels";
-		case 431:
-			return ERR_NONICKNAMEGIVEN(target);
-		case 433:
-			return ERR_NICKNAMEINUSE(target);
-		case 461:
-			return ERR_NEEDMOREPARAMS(target, args[0]);
-		case 462:
-			return ERR_ALREADYREGISTRED(target);
-		case 464:
-			return ERR_PASSWDMISMATCH(target);
-		case 471:
-			return ERR_CHANNELISFULL(target);
-		case 475:
-			return target + ":Cannot join channel (+k)";
-		default:
-			return std::string("defaul");
-	}
+	return reponse;
+	// switch (code) {
+	// 	case 001:
+	// 		return RPL_WELCOME(target);
+	// 		// return target + ":Welcome " + target + " to the ft_irc network";
+	// 	case 401:
+	// 		return ERR_NOSUCHNICK(target, args[0]);
+	// 		// return target + ": " + args[0] + ":No such nick/channel";
+	// 	case 403:
+	// 		return ERR_NOSUCHCHANNEL(target, args[0]);
+	// 	case 405:
+	// 		return target + ":You have joined too many channels";
+	// 	case 431:
+	// 		return ERR_NONICKNAMEGIVEN(target);
+	// 	case 433:
+	// 		return ERR_NICKNAMEINUSE(target);
+	// 	case 461:
+	// 		return ERR_NEEDMOREPARAMS(target, args[0]);
+	// 	case 462:
+	// 		return ERR_ALREADYREGISTRED(target);
+	// 	case 464:
+	// 		return ERR_PASSWDMISMATCH(target);
+	// 	case 471:
+	// 		return ERR_CHANNELISFULL(target);
+	// 	case 475:
+	// 		return target + ":Cannot join channel (+k)";
+	// 	default:
+	// 		return std::string("defaul");
+	// }
 }
 
 Channel					*User::getChannel() const { return _channel; };

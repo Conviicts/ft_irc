@@ -17,7 +17,7 @@ int IrcServer::NOTICE(User &u, Message msg) {
         Channel *channel = u.getChannel();
         if (!channel)
             return (0);
-        
+        channel->broadcast(RPL_NOTICE(u.getPrefix(), target, message));
     }
     return (1);
 }
