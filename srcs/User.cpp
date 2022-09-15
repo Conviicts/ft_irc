@@ -5,7 +5,6 @@ User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
 	_registered(false),
 	_state(0),
-	_maskMode(0),
 	_idle(time(NULL))
 {}
 
@@ -55,27 +54,31 @@ std::string             User::getResponse(User &u, int code, std::vector<std::st
 	target += " ";
 	switch (code) {
 		case 001:
-			return target + ":Welcome " + target + " to the ft_irc network";
+		return RPL_WELCOME(target);
+			// return target + ":Welcome " + target + " to the ft_irc network";
 		case 401:
-			return target + ": " + args[0] + ":No such nick/channel";
+			return ERR_NOSUCHNICK(target, args[0]);
+			// return target + ": " + args[0] + ":No such nick/channel";
+		case 403:
+			return ERR_NOSUCHCHANNEL(target, args[0]);
 		case 405:
 			return target + ":You have joined too many channels";
 		case 431:
-			return target + ":No nickname given";
+			return ERR_NONICKNAMEGIVEN(target);
 		case 433:
-			return target + ":Nickname is already in use";
+			return ERR_NICKNAMEINUSE(target);
 		case 461:
-			return target + ": " + args[0] + ":Not enough parameters";
+			return ERR_NEEDMOREPARAMS(target, args[0]);
 		case 462:
-			return target + ":You may not reregister";
+			return ERR_ALREADYREGISTRED(target);
 		case 464:
-			return target + ":Password incorrect";
+			return ERR_PASSWDMISMATCH(target);
 		case 471:
-			return target + ":Cannot join channel (+l)";
+			return ERR_CHANNELISFULL(target);
 		case 475:
 			return target + ":Cannot join channel (+k)";
 		default:
-			return std::string("");
+			return std::string("defaul");
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "IrcServer.hpp"
 #include "Channel.hpp"
+#include "ERR_RPL.hpp"
 
 IrcServer::IrcServer(char **av) : 
     _port(av[1]),
@@ -11,11 +12,11 @@ IrcServer::IrcServer(char **av) :
 	_userCommands["NICK"] = &IrcServer::NICK;
 	_userCommands["USER"] = &IrcServer::USER;
 	_userCommands["QUIT"] = &IrcServer::QUIT;
-
 	_userCommands["PRIVMSG"] = &IrcServer::PRIVMSG;
 	_userCommands["JOIN"] = &IrcServer::JOIN;
-    _userCommands["OPER"] = &IrcServer::OPER;
 
+    //TODO: Commands
+    _userCommands["OPER"] = &IrcServer::OPER;
     _userCommands["MODE"] = &IrcServer::MODE;
 
 }
@@ -220,11 +221,3 @@ int                 IrcServer::JOIN(User &u, Message msg) {
     u.joinChannel(u, channel);
     return (1);
 }
-
-// int IrcServer::OPER(User &u, Message msg) {
-//     (void)u;
-//     (void)msg;
-//     std::cout << "Je suis un operator." << std::endl;
-
-//     return (1);
-// }

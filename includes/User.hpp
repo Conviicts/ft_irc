@@ -3,23 +3,12 @@
 
 #include "BasicConnection.hpp"
 #include "Channel.hpp"
+#include "ERR_RPL.hpp"
 
 class Channel;
 
 class User : public TCP::BasicConnection {
     public:
-
-        enum Flag
-	    {
-            /* 'i' - invisible */
-            INVISIBLE = 1 << 1,
-            /** 'w' - User receives wallops */
-            WALLOPS = 1 << 2,
-            /** 'o' - Operator flag */
-            OPERATOR = 1 << 3,
-            /** 's' - Marks a User for receipt of server notices */
-            SERVNOTICES = 1 << 4
-	    };
 
         User(TCP::TCPSocket *socket);
         virtual ~User();
@@ -37,6 +26,7 @@ class User : public TCP::BasicConnection {
         void					setState(int state);
 
         bool                    isRegistered() const;
+
         std::string             getPrefix() const;
 
         std::string             getResponse(User &u, int code, std::vector<std::string> args);
@@ -54,7 +44,6 @@ class User : public TCP::BasicConnection {
         std::string             _realname;
         bool                    _registered;
         int                     _state;
-        char                    _maskMode;
 
     protected:
         time_t                  _idle;
