@@ -5,6 +5,7 @@ User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
 	_registered(false),
 	_state(0),
+	_mode(false),
 	_idle(time(NULL))
 {}
 
@@ -22,6 +23,9 @@ void 					User::setRealname(const std::string &realname) { _realname = realname;
 
 
 bool                    User::isRegistered() const { return (_registered); }
+
+bool                    User::isOperator() const { return (_mode); }
+void					User::setOperator(bool value) { _mode = value; }
 
 std::string 			User::getPrefix() const {
 	return _nickname + (_username.empty() ? "" : "!" + _username) + (socket()->host().empty() ? "" : "@" + socket()->host());

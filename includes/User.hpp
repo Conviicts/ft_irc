@@ -10,6 +10,13 @@ class Channel;
 class User : public TCP::BasicConnection {
     public:
 
+        enum Status {            // State // c'est pour toi john si tu veux utiliser ca si non tu peux delete 
+			UNREGISTER,
+			UNREGISTER_PASS,
+			REGISTER,
+			DISCONNECT,
+		};
+
         User(TCP::TCPSocket *socket);
         virtual ~User();
 
@@ -27,6 +34,9 @@ class User : public TCP::BasicConnection {
 
         bool                    isRegistered() const;
 
+        bool                    isOperator() const;
+        void                    setOperator(bool value);
+
         std::string             getPrefix() const;
 
         std::string             getResponse(User &u, int code, std::vector<std::string> args);
@@ -43,6 +53,7 @@ class User : public TCP::BasicConnection {
         std::string             _username;
         std::string             _realname;
         bool                    _registered;
+        bool                    _mode; // operator or not
         int                     _state;
 
     protected:
