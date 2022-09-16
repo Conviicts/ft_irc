@@ -25,7 +25,7 @@ std::string RPL_NOTONCHANNEL();
 // ERR
 std::string ERR_NOSUCHNICK(std::string nick, std::string arg);
 std::string ERR_NOSUCHCHANNEL(std::string nick, std::string arg);
-std::string ERR_CANNOTSENDTOCHAN();
+std::string ERR_CANNOTSENDTOCHAN(std::string source, std::string channel);
 std::string	ERR_TOOMANYCHANNELS(std::string nick);
 std::string ERR_NONICKNAMEGIVEN(std::string nick);
 std::string ERR_NICKNAMEINUSE(std::string nick);

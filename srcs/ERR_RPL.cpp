@@ -80,16 +80,17 @@ std::string RPL_NOTONCHANNEL() {
 /* ERRORS                                                                     */
 /* -------------------------------------------------------------------------- */
 
+std::string ERR_CANNOTSENDTOCHAN(std::string source, std::string channel) {
+	return "404 " + source + " " + channel + " :Cannot send to channel";
+}
+
+
 std::string ERR_NOSUCHNICK(std::string nick, std::string arg) {
 	return "401 " + nick + ": " + arg + ":No such nick";
 }
 
 std::string ERR_NOSUCHCHANNEL(std::string nick, std::string arg) {
 	return "403 " + nick + ": " + arg + ":No such channel";
-}
-
-std::string ERR_CANNOTSENDTOCHAN() {
-	return "404 ";
 }
 
 std::string	ERR_TOOMANYCHANNELS(std::string nick) {
@@ -120,7 +121,7 @@ std::string ERR_USERONCHANNEL() {
 }
 
 std::string ERR_NEEDMOREPARAMS(std::string nick, std::string arg) {
-	return "461 " + nick + ": " + arg + ":Not enough parameters";
+	return "461 " + (nick.empty() ?  "*" : nick) + " " + arg + " :Not enough parameters";
 }
 
 std::string ERR_ALREADYREGISTRED(std::string nick) {
@@ -132,7 +133,7 @@ std::string ERR_ERRONEUSNICKNAME() {
 }
 
 std::string ERR_PASSWDMISMATCH(std::string nick) {
-	return "464 " + nick + ":Password incorrect";
+	return "464 " + (nick.empty() ?  "*" : nick) + " :Password incorrect";
 }
 
 std::string ERR_CHANNELISFULL(std::string nick) {
