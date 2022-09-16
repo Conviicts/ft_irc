@@ -97,11 +97,16 @@ std::string	ERR_TOOMANYCHANNELS(std::string nick) {
 	return "405 " + nick + ":You have joined too many channels";
 }
 std::string ERR_NONICKNAMEGIVEN(std::string nick) {
-	return "431 " + nick + ":No nickname given";
+	return "431 " + (nick.empty() ?  "*" : nick) + ":No nickname given";
 }
 
 std::string ERR_NICKNAMEINUSE(std::string nick) {
-	return "433 " + nick + ":Nickname is already in use";
+	return "433 " + (nick.empty() ?  "*" : nick) + ":Nickname is already in use";
+}
+
+std::string ERR_ERRONEUSNICKNAME (std::string nick, std::string nick2)
+{
+	return "462 "+ (nick.empty() ?  "*" : nick) + " " + nick2 + " :Erroneus nickname";
 }
 
 std::string ERR_NICKCOLLISION() {

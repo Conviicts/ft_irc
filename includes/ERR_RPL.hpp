@@ -29,6 +29,7 @@ std::string ERR_CANNOTSENDTOCHAN(std::string source, std::string channel);
 std::string	ERR_TOOMANYCHANNELS(std::string nick);
 std::string ERR_NONICKNAMEGIVEN(std::string nick);
 std::string ERR_NICKNAMEINUSE(std::string nick);
+std::string ERR_ERRONEUSNICKNAME (std::string nick, std::string nick2);
 std::string ERR_NICKCOLLISION();
 std::string ERR_USERNOTINCHANNEL();
 std::string ERR_NOTONCHANNEL();
