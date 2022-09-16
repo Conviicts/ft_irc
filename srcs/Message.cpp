@@ -22,6 +22,8 @@ void eraseChar(std::string &str, const std::string &delim) {
 
 Message::Message(const std::string &message) {
     std::vector<std::string> args = split(message, ' ');
+    eraseChar(args[0], "\r");
+    eraseChar(args[0], "\n");
     _command = args[0];
     for (size_t i = 1; i < args.size(); i++) {
         eraseChar(args[i], "\r");
