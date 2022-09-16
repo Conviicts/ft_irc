@@ -9,157 +9,169 @@
 /* -------------------------------------------------------------------------- */
 
 std::string RPL_NOTICE(std::string source, std::string target, std::string message) {
-    return ":" + source + " NOTICE " + target + " :" + message;
+	return ":" + source + " NOTICE " + target + " :" + message;
 }
 
 std::string RPL_WELCOME(std::string nick) {
-    return "001 "+ nick +" :Welcome to the Internet Relay Network!";
+	return "001 "+ nick +" :Welcome to the Internet Relay Network!";
 }
 
 std::string RPL_YOURHOST(std::string nick, std::string servername, std::string version) {
-    return "002 "+ nick + " Your host is " + servername + ", running version " + version;
+	return "002 "+ nick + " Your host is " + servername + ", running version " + version;
 }
 
 std::string RPL_CREATED(std::string nick, std::string date) {
-    return "003 "+ nick + " This server was created " + date;
+	return "003 "+ nick + " This server was created " + date;
 }
 
 std::string RPL_MYINFO() {
-    return "004 ";
+	return "004 ";
 }
 
 std::string RPL_UMODEIS() {
-    return "221 ";
+	return "221 ";
 }
 
 std::string RPL_LISTSTART() {
-    return "321 ";
+	return "321 ";
 }
 
 std::string RPL_LIST() {
-    return "322 ";
+	return "322 ";
 }
 
 std::string RPL_LISTEND() {
-    return "323 ";
+	return "323 ";
 }
 
 std::string RPL_NOTOPIC() {
-    return "331 ";
+	return "331 ";
 }
 
 std::string RPL_TOPIC() {
-    return "332 ";
+	return "332 ";
 }
 
 std::string RPL_NAMREPLY() {
-    return "353 ";
+	return "353 ";
 }
 
 std::string RPL_ENDOFNAMES() {
-    return "366 ";
+	return "366 ";
 }
 
 std::string RPL_MOTDSTART() {
-    return "375 ";
+	return "375 ";
 }
 
 std::string RPL_ENDOFMOTD() {
-    return "376 ";
+	return "376 ";
 }
 
 std::string RPL_YOUROPER(std::string nick, std::string arg1, std::string arg2) {
-    return "381 " + nick + ":Attempt to register as an operator using a username of '" + arg1 + "' and '" + arg2 + "' as the password.";
+	return "381 " + nick + ":Attempt to register as an operator using a username of '" + arg1 + "' and '" + arg2 + "' as the password.";
 }
 
 std::string RPL_NOTONCHANNEL() {
-    return "442 ";
+	return "442 ";
 }
 
 /* -------------------------------------------------------------------------- */
 /* ERRORS                                                                     */
 /* -------------------------------------------------------------------------- */
 
-std::string ERR_CLOSINGLINK() {
-    return "ERR_COSINGLINK";
-}
-
 std::string ERR_NOSUCHNICK(std::string nick, std::string arg) {
-    return "401 " + nick + ": " + arg + ":No such nick";
+	return "401 " + nick + ": " + arg + ":No such nick";
 }
 
 std::string ERR_NOSUCHCHANNEL(std::string nick, std::string arg) {
-    return "403 " + nick + ": " + arg + ":No such channel";
+	return "403 " + nick + ": " + arg + ":No such channel";
 }
 
 std::string ERR_CANNOTSENDTOCHAN() {
-    return "404 ";
+	return "404 ";
 }
 
+std::string	ERR_TOOMANYCHANNELS(std::string nick) {
+	return "405 " + nick + ":You have joined too many channels";
+}
 std::string ERR_NONICKNAMEGIVEN(std::string nick) {
-    return "431 " + nick + ":No nickname given";
+	return "431 " + nick + ":No nickname given";
 }
 
 std::string ERR_NICKNAMEINUSE(std::string nick) {
-    return "433 " + nick + ":Nickname is already in use";
+	return "433 " + nick + ":Nickname is already in use";
 }
 
 std::string ERR_NICKCOLLISION() {
-    return "436 ";
+	return "436 ";
 }
 
 std::string ERR_USERNOTINCHANNEL() {
-    return "441 ";
+	return "441 ";
 }
 
 std::string ERR_NOTONCHANNEL() {
-    return "442 ";
+	return "442 ";
 }
 
 std::string ERR_USERONCHANNEL() {
-    return "443 ";
+	return "443 ";
 }
 
 std::string ERR_NEEDMOREPARAMS(std::string nick, std::string arg) {
-    return "461 " + nick + ": " + arg + ":Not enough parameters";
+	return "461 " + nick + ": " + arg + ":Not enough parameters";
 }
 
 std::string ERR_ALREADYREGISTRED(std::string nick) {
-    return "462 " + nick + ":You may not reregister";
+	return "462 " + nick + ":You may not reregister";
 }
 
 std::string ERR_ERRONEUSNICKNAME() {
-    return "462 ";
+	return "462 ";
 }
 
 std::string ERR_PASSWDMISMATCH(std::string nick) {
-    return "464 " + nick + ":Password incorrect";
+	return "464 " + nick + ":Password incorrect";
 }
 
 std::string ERR_CHANNELISFULL(std::string nick) {
-    return "471 " + nick + ":Cannot join channel (+l)";
+	return "471 " + nick + ":Cannot join channel (+l)";
 }
 
 std::string ERR_UNKNOWNMODE() {
-    return "472 ";
+	return "472 ";
 }
 
+std::string ERR_INVITEONLYCHAN(std::string nick) {
+	return "473 " + nick + "<canal> :Cannot join channel (+i)";
+}
+
+std::string ERR_BANNEDFROMCHAN(std::string nick) {
+	return "474 " + nick + "<canal> :Cannot join channel (+b)";
+}
+
+std::string ERR_BADCHANNELKEY(std::string nick) {
+	return "475 " + nick + ":Cannot join channel (+k)";
+}
+
+
 std::string ERR_INVITEONLYCHAN() {
-    return "473 ";
+	return "473 ";
 }
 
 std::string ERR_NOPRIVILEGES() {
-    return "481 ";
+	return "481 ";
 }
 
 std::string ERR_CHANOPRIVSNEEDED() {
-    return "482 ";
+	return "482 ";
 }
 
 std::string ERR_UMODEUNKNOWNFLAG() {
-    return "501 ";
+	return "501 ";
 }
 
 std::string ERR_USERSDONTMATCH() {
-    return "502 ";
+	return "502 ";
 }

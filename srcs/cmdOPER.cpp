@@ -10,21 +10,16 @@
 //            ERR_NEEDMOREPARAMS              RPL_YOUREOPER
 //            ERR_NOOPERHOST                  ERR_PASSWDMISMATCH
 
-// Exemple:
-// OPER foo bar
-// ; Tentative d'enregistrement en tant qu'opérateur, de l'utilisateur "foo" utilisant "bar" comme mot de passe.
-
-
 int IrcServer::OPER(User &u, Message msg) {
 
-    if (msg.args().size() != 2) {
-        u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-    }
-    if (msg.args()[0] == "admin" && msg.args()[1] == "admin") {
+	if (msg.args().size() != 2) {
+		u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
+	}
+	if (msg.args()[0] == "admin" && msg.args()[1] == "admin") {
 		u.setOperator(true);
 		u.reply(u, RPL_YOUROPER(u.nickname(), msg.args()[0], msg.args()[1]));
 	}
 	else
 		u.reply(u, ERR_PASSWDMISMATCH(u.nickname()));
-    return (1);
+	return (1);
 }

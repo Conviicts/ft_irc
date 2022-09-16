@@ -55,45 +55,42 @@
 
 
 
-int     IrcServer::MODE(User &u, Message msg) {
-    (void)u;
-    (void)msg;
-    std::cout << "MODE commande" << std::endl;
+int		IrcServer::MODE(User &u, Message msg) {
+	(void)u;
+	(void)msg;
+	std::cout << "MODE commande" << std::endl;
 
-    if (msg.args().size() < 1) {
-        std::cout << "ERR_NEEDMOREPARAMS" << std::endl;
-    }
-    
-    // User MODE
-    // Paramètres: <pseudonyme> {[+|-]|i|w|s|o}
-    if (msg.args().size() == 2) {
-        //check u.nickname()
-        if (u.nickname() != msg.args()[0]) {
-            std::cout << "ERR_NOSUCHNICK" << std::endl;
-        }
-        if (msg.args()[1] == "-o") {
-            // le user se 'deoppe'
-        }
-    }
+	if (msg.args().size() < 1) {
+		std::cout << "ERR_NEEDMOREPARAMS" << std::endl;
+	}
+	
+	// User MODE
+	// Paramètres: <pseudonyme> {[+|-]|i|w|s|o}
+	if (msg.args().size() == 2) {
+		//check u.nickname()
+		if (u.nickname() != msg.args()[0]) {
+			std::cout << "ERR_NOSUCHNICK" << std::endl;
+		}
+		if (msg.args()[1] == "-o") {
+			// le user se 'deoppe'
+		}
+	}
 
-    // Channel MODE
-    // Paramètres: <canal> {[+|-]|o|p|s|i|t|n|b|v} [<limite>] [<utilisateur>] [<masque de bannissement >]
-    if (msg.args().size() == 5) {
-        Channel *channel;
+	// Channel MODE
+	// Paramètres: <canal> {[+|-]|o|p|s|i|t|n|b|v} [<limite>] [<utilisateur>] [<masque de bannissement >]
+	if (msg.args().size() == 5) {
+		Channel *channel;
 
-        channel = _network.getChannel(msg.args()[0]);
-        if (!channel) {
-            std::cout << "ERR_NOSUCHCHANNEL" << std::endl;
-        }
+		channel = _network.getChannel(msg.args()[0]);
+		if (!channel) {
+			std::cout << "ERR_NOSUCHCHANNEL" << std::endl;
+		}
 
-        // check msg[2] = flags : {[+|-]|o|p|s|i|t|n|b|v}
-        // check msg[3] = <limite>
-        // check msg[4] = <user>
-        // check msg[5] = <masque de bannissement >
-    }
+		// check msg[2] = flags : {[+|-]|o|p|s|i|t|n|b|v}
+		// check msg[3] = <limite>
+		// check msg[4] = <user>
+		// check msg[5] = <masque de bannissement >
+	}
 
-
-
-
-    return (1);
+	return (1);
 }
