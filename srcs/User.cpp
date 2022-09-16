@@ -3,6 +3,7 @@
 
 User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
+	_channel(NULL),
 	_registered(false),
 	_mode(false),
 	_state(0),
