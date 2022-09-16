@@ -24,7 +24,7 @@ on code un serveur irc en c++ lol.
 - [ ] KICK
 - [ ] LIST
 - [ ] NAMES
-- [ ] NOTICE
+- [x] NOTICE
 - [ ] PART
 - [ ] PING
 - [ ] QUIT

@@ -7,61 +7,77 @@
 #include "Message.hpp"
 
 class IrcServer {
-    public:
-        IrcServer(char **av);
-        ~IrcServer();
+	public:
+		IrcServer(char **av);
+		~IrcServer();
 
-        enum State {
-            STARTED,
-            RESTARTING,
-            CLOSED
-        };
+		enum State {
+			STARTED,
+			RESTARTING,
+			CLOSED
+		};
 
-        int             PASS(User &u, Message msg);
-        int             NICK(User &u, Message msg);
-        int             USER(User &u, Message msg);
-        int             QUIT(User &u, Message msg);
-        int             PRIVMSG(User &u, Message msg);
-        int             JOIN(User &u, Message msg);
-        int             OPER(User &u, Message msg);
-        int             MODE(User &u, Message msg);
-        int             PART(User &u, Message msg);
-        int             TOPIC(User &u, Message msg);
-        int             NAMES(User &u, Message msg);
-        int             LIST(User &u, Message msg);
-        int             INVITE(User &u, Message msg);
-        int             KICK(User &u, Message msg);
-        int             NOTICE(User &u, Message msg);
-        int             WHO(User &u, Message msg);
-        int             KILL(User &u, Message msg);
-        int             PING(User &u, Message msg);
+		int				PASS(User &u, Message msg);
+		int				NICK(User &u, Message msg);
+		int				USER(User &u, Message msg);
+		int				QUIT(User &u, Message msg);
+		int				PRIVMSG(User &u, Message msg);
+		int				JOIN(User &u, Message msg);
+		int				OPER(User &u, Message msg);
+		int				MODE(User &u, Message msg);
+		int				PART(User &u, Message msg);
+		int				TOPIC(User &u, Message msg);
+		int				NAMES(User &u, Message msg);
+		int				LIST(User &u, Message msg);
+		int				INVITE(User &u, Message msg);
+		int				KICK(User &u, Message msg);
+		int				NOTICE(User &u, Message msg);
+		int				WHO(User &u, Message msg);
+		int				KILL(User &u, Message msg);
+		int				PING(User &u, Message msg);
 
-        void            listen(const std::string &port, size_t maxQueueLen = 5);
-        void            run(); // Run the server
-        
-        void            flushZombies(); // Flush the zombies
+		void			listen(const std::string &port, size_t maxQueueLen = 5);
+		void			run(); // Run the server
+		
+		void			flushZombies(); // Flush the zombies
 
-        State           state() const; // get the server state
-    private:
-	    typedef int (IrcServer::*UserCommandPointer)(User &, Message);
-	    typedef std::map<std::string, UserCommandPointer> userCommands;
+		State			state() const; // get the server state
 
-        std::string     _port;
-        std::string     _password;
+		class UserNotFoundException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+					return ("User not found");
+				}
+		};
 
-        State           _state; // Current state of the server
-        bool            _init; // True if the server is initialized
-        TCP::TCPServer  _server; // The tcp server
-        Network			_network;
+		class ChannelNotFoundException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+					return ("Channel not found");
+				}
+		};
 
-        userCommands	_userCommands;
+	private:
+		typedef int (IrcServer::*UserCommandPointer)(User &, Message);
+		typedef std::map<std::string, UserCommandPointer> userCommands;
+
+		std::string		_port;
+		std::string		_password;
+
+		State			_state; // Current state of the server
+		bool			_init; // True if the server is initialized
+		TCP::TCPServer	_server; // The tcp server
+		Network			_network;
+
+		userCommands	_userCommands;
 
 
-        void            execute(TCP::BasicConnection *c, Message message);
+		void			execute(TCP::BasicConnection *c, Message message);
 
-        void            disconnect(TCP::TCPSocket *socket, const std::string &reason) throw(); // Disconnect a client
-	    void            disconnect(User &u, const std::string &reason, bool notifyUser = 0) throw(); // Disconnect a client
-        
-        IrcServer(const IrcServer &ref);
-        IrcServer &operator=(const IrcServer &ref);
+		void			disconnect(TCP::TCPSocket *socket, const std::string &reason) throw(); // Disconnect a client
+		void			disconnect(User &u, const std::string &reason, bool notifyUser = 0) throw(); // Disconnect a client
+		
+		IrcServer(const IrcServer &ref);
+		IrcServer &operator=(const IrcServer &ref);
+
 };
