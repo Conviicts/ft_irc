@@ -22,6 +22,7 @@ class Channel {
 		int							 maxUsers() const;
 		void						setMaxUsers(int maxUsers);
 
+		const std::string			&getTopic() const;
 		void						setTopic(std::string const & topic);
 
 		void						broadcast(const std::string &msg);

@@ -35,6 +35,7 @@ int							Channel::maxUsers() const { return _maxUsers; }
 
 void						Channel::setMaxUsers(int maxUsers) { _maxUsers = maxUsers; }
 
+const std::string			&Channel::getTopic() const { return _topic; }
 void						Channel::setTopic(std::string const & topic) { _topic = topic; }
 
 void						Channel::broadcast(const std::string &msg) {
