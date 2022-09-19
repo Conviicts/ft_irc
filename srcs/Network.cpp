@@ -18,7 +18,10 @@ void				        Network::remove(User *user) throw() {
 }
 
 void                        Network::clear() throw() {
-
+	for (Users::iterator it = _users.begin(); it != _users.end(); ++it)
+		delete it->second;
+	for (Zombies::iterator it = _zombies.begin(); it != _zombies.end(); ++it)
+		delete *it;
 }
 
 TCP::BasicConnection		*Network::getUserBySocket(TCP::TCPSocket *socket) {
