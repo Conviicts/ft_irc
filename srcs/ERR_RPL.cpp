@@ -44,12 +44,12 @@ std::string RPL_LISTEND() {
 	return "323 ";
 }
 
-std::string RPL_NOTOPIC() {
-	return "331 ";
+std::string RPL_NOTOPIC(std::string nick, std::string channel) {
+	return "331 " + nick + ": " + channel + ":No topic is set";
 }
 
-std::string RPL_TOPIC() {
-	return "332 ";
+std::string RPL_TOPIC(std::string nick, std::string channel, std::string topic) {
+	return "332 " + nick + ": " + channel + ": " + topic;
 }
 
 std::string RPL_NAMREPLY() {
@@ -117,8 +117,8 @@ std::string ERR_USERNOTINCHANNEL() {
 	return "441 ";
 }
 
-std::string ERR_NOTONCHANNEL() {
-	return "442 ";
+std::string ERR_NOTONCHANNEL(std::string nick, std::string channel) {
+	return "442 " + nick + ": " + channel + ":You're not on that channel";
 }
 
 std::string ERR_USERONCHANNEL() {
@@ -166,12 +166,12 @@ std::string ERR_INVITEONLYCHAN() {
 	return "473 ";
 }
 
-std::string ERR_NOPRIVILEGES() {
-	return "481 ";
+std::string ERR_NOPRIVILEGES(std::string nick) {
+	return "481 " + nick + ":Permission Denied- You're not an IRC operator";
 }
 
-std::string ERR_CHANOPRIVSNEEDED() {
-	return "482 ";
+std::string ERR_CHANOPRIVSNEEDED(std::string nick, std::string channel) {
+	return "482 " + nick + ": " + channel + ":You're not channel operator";
 }
 
 std::string ERR_UMODEUNKNOWNFLAG() {

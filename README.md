@@ -6,7 +6,7 @@ on code un serveur irc en c++ lol.
 
 ### sujet
 
-- [ ] prendre deux parametres : `./ircserv <port> <password>`
+- [x] prendre deux parametres : `./ircserv <port> <password>`
 - [ ] gérer plusieurs clients simultanément sans jamais bloquer
 - [ ] s'authentifier
 - [x] définir un nickname
@@ -20,21 +20,31 @@ on code un serveur irc en c++ lol.
 
 ### Commandes
 
+- [x] NICK
+- [x] JOIN
+- [x] USER
+- [x] QUIT
+- [x] OPER
+- [x] PASS
+- [x] PRIVMSG
+- [x] NOTICE
+- [x] TOPIC
+- [x] KILL
 - [ ] INVITE
 - [ ] KICK
 - [ ] LIST
 - [ ] NAMES
-- [x] NOTICE
 - [ ] PART
 - [ ] PING
-- [ ] QUIT
-- [ ] USER
-- [ ] JOIN
-- [ ] KILL
 - [ ] MODE
-- [x] NICK
-- [x] OPER
-- [x] PASS
-- [ ] PRIVMSG
-- [ ] TOPIC
 - [ ] WHO
+
+### Modes
+
+- [x] `o` operator (user)
+
+- [ ] `o` operator (de channel)
+- [ ] `i` sur invitation (channel)
+- [ ] `l` limite / max size (channel)
+- [ ] `k` cle / mdp pour join le channel (channel)
+- [ ] `b` masque de bannissement / users banni pour join un channel (channel)

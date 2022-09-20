@@ -4,7 +4,8 @@
 Channel::Channel(const std::string &name, const std::string &password, User *admin) :
 	_name(name),
 	_password(password),
-	_admin(admin) {
+	_admin(admin),
+	_invite_only(false) {
 
 }
 
@@ -61,13 +62,53 @@ std::vector<std::string>	Channel::usersNick() {
 	return nicks;
 }
 
-bool						Channel::isOnChannel(User const & nick) const {
+void Channel::setInviteOnly(bool mode) { _invite_only = mode; }
+
+void Channel::invite(User *user) { _invited.push_back(user); }
+
+void Channel::removeInvited(User &user) {
+
+	for (iterator it = _invited.begin(); it != _invited.end(); ++it)
+	{
+		if ((*it).nickname() == user.nickname())
+		{
+			_invited.erase(it);
+			return ;
+		}
+	}
+}
+
+bool						Channel::isOnChannel(User const *user) const {
 
 	std::vector<User *>::const_iterator it = _users.begin();
 
 	for (; it != _users.end(); it++) {
-		if (*it == &nick)
+		if (*it == user)
 			return true;
 	}
 	return false;
 }
+
+bool						Channel::isOperator(User const *user) const {
+
+	std::vector<User*>::const_iterator it = _operator.begin();
+
+	for (; it != _operator.end(); it++) {
+		if (*it == user)
+			return true;
+	}
+	return false;
+}
+
+bool						Channel::isInvited(User const &user) const {
+
+	std::vector<User*>::const_iterator it = _invited.begin();
+
+	for (; it != _invited.end(); it++) {
+		if (*it == &user)
+			return true;
+	}
+	return false;
+}
+
+bool						Channel::isInviteOnly() const { return _invite_only; }

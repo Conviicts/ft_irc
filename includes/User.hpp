@@ -12,7 +12,7 @@ class User : public TCP::BasicConnection {
 
 		enum Status {			// State // c'est pour toi john si tu veux utiliser ca si non tu peux delete 
 			UNREGISTER,
-			UNREGISTER_PASS,
+			UNREGISTER_PASS, // ?
 			REGISTER,
 			DISCONNECT,
 		};
@@ -48,7 +48,7 @@ class User : public TCP::BasicConnection {
 		void					setChannel(Channel *channel);
 
 	private:
-		Channel					*_channel;
+		Channel					*_channel; // std::vector<Channel *> _channel;
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;

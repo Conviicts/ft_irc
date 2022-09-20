@@ -31,18 +31,26 @@ class Channel {
 		int							clientSize() const;
 		std::vector<std::string>	usersNick();
 
-		bool						isOnChannel(User const & nick) const;
+		void						setInviteOnly(bool mode);
+		void						invite(User *user);
+		void						removeInvited(User &user);
+
+		bool						isOnChannel(User const *user) const;
+		bool						isOperator(User const *user) const;
+		bool						isInvited(User const & user) const;
+		bool						isInviteOnly() const;
 
 	private:
 		Channel(const Channel &);
 		Channel &operator=(const Channel &);
 
+		int					_maxUsers; // size_t
+		bool				_invite_only;
+		User				*_admin;
 		std::string			_name;
 		std::string			_password;
 		std::string			_topic;
-		User				*_admin;
-		int					_maxUsers;
-		std::vector<User *>	_users;
-        std::vector<User*>	_invited;
-        std::vector<User*>	_operator;
+		std::vector<User*>	_users;
+		std::vector<User*>	_invited;
+		std::vector<User*>	_operator;
 };

@@ -70,4 +70,4 @@ void					User::joinChannel(User &u, Channel *channel) {
 	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
 }
 
-void					User::setChannel(Channel *channel) { _channel = channel; };
+void					User::setChannel(Channel *channel) { _channel = channel; }

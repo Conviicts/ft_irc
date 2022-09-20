@@ -1,4 +1,5 @@
 #include "IrcServer.hpp"
+#include "ERR_RPL.hpp"
 
 int		IrcServer::PRIVMSG(User &u, Message msg) {
 
@@ -17,8 +18,17 @@ int		IrcServer::PRIVMSG(User &u, Message msg) {
 			u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
 			return (0);
 		}
-		//TODO: don't receive your own message
-		channel->broadcast(": " + u.username() + " PRIVMSG " + target + " :" + message);
+		std::vector<std::string>			users(channel->usersNick());
+		std::vector<std::string>::iterator	i;
+		
+		for (i = users.begin(); i != users.end(); i++)
+			if (*i == u.nickname())
+				break;
+		if (i == users.end()) {
+			u.reply(u, ERR_CANNOTSENDTOCHAN(u.nickname(), target));
+			return (0);
+		}
+		channel->broadcast(":" + u.getPrefix() + " PRIVMSG " + target + " :" + message);
 		return (1);
 	}
 	User *msg_target = _network.getByNickname(target);
