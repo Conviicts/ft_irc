@@ -5,11 +5,11 @@ On code un serveur irc en c++ lol.
 L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en utilisant un vrai client IRC.
 
 ## Sommaire
-1. [Le sujet](https://github.com/tinaserra/ft_irc_begins#1-le-sujet-)
-2. [Qu'est-ce qu'un serveur?](https://github.com/tinaserra/ft_irc_begins#2-quest-ce-quun-serveur)
-3. [Ports & protocoles](https://github.com/tinaserra/ft_irc_begins#3-ports--protocoles)
-4. [Le protocole TCP](https://github.com/tinaserra/ft_irc_begins#4-le-protocole-tcp-transmission-control-protocol)
-5. [Usefull links](https://github.com/tinaserra/ft_irc_begins#usefull-links-%EF%B8%8F)
+1. [Le sujet](https://github.com/Conviicts/irc2#1-le-sujet-)
+2. [Qu'est-ce qu'un serveur?](https://github.com/Conviicts/irc2#2-quest-ce-quun-serveur)
+3. [Ports & protocoles](https://github.com/Conviicts/irc2#3-ports--protocoles)
+4. [Le protocole TCP](https://github.com/Conviicts/irc2#4-le-protocole-tcp-transmission-control-protocol)
+5. [Usefull links](https://github.com/Conviicts/irc2#usefull-links-%EF%B8%8F)
 
 ## todo
 
