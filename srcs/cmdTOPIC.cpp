@@ -20,7 +20,6 @@
 
 void	handleTopic(User &u, Message msg, Network &network) {
 
-	// Channel *channel = u.getChannel();
 	Channel *channel = network.getChannel(msg.args()[0]);
 
 	// std::cout << "Size: " << msg.args().size() << std::endl;
@@ -55,14 +54,17 @@ void	handleTopic(User &u, Message msg, Network &network) {
 
 int		IrcServer::TOPIC(User &u, Message msg) {
 
-	if (msg.args().size() < 1) {
+	if (msg.args().size() < 1)
 		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-	}
 
 	try {
 		handleTopic(u, msg, _network);
-	} catch(IrcServer::ChannelNotFoundException & e) {
-		u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[0]));
+	}
+	catch(IrcServer::ChannelNotFoundException & e) {
+		u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
+	}
+	catch(IrcServer::UserNotFoundException & e) {
+		u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[1]));
 	}
 
 	return (1);

@@ -53,43 +53,92 @@
 //            ERR_USERSDONTMATCH              RPL_UMODEIS
 //            ERR_UMODEUNKNOWNFLAG
 
-
-
-int		IrcServer::MODE(User &u, Message msg) {
+void	IrcServer::_userMODE(User *u, Message msg, User *target) {
 	(void)u;
 	(void)msg;
-	std::cout << "MODE commande" << std::endl;
+	(void)target;
+}
 
-	if (msg.args().size() < 1) {
-		std::cout << "ERR_NEEDMOREPARAMS" << std::endl;
+void	IrcServer::_channelMODE(User *u, Message msg, Channel *channel) {
+
+	std::string			mode;
+	int					type = 0;
+	char				c;
+	int					limits = -1;
+
+	if (msg.args().size() < 3)
+	{
+		// 324     RPL_CHANNELMODEIS
+		return ;
+	}
+	// msg.args()[3] == user?
+	User *target = _network.getByNickname(msg.args()[3]);
+	if (!target) {
+
+		// msg.args()[3] == limits?
+		// est-ce que cest un chiffre ?
 	}
 	
-	// User MODE
-	// Paramètres: <pseudonyme> {[+|-]|i|w|s|o}
-	if (msg.args().size() == 2) {
-		//check u.nickname()
-		if (u.nickname() != msg.args()[0]) {
-			std::cout << "ERR_NOSUCHNICK" << std::endl;
+	if (channel->isOperator(u)) {
+
+		for (int i = 0; (c = msg.args()[1][i]); i++)
+		{
+			switch (c) {
+				case '+':
+				case '-':
+					type = (c == '+');
+					mode =+c;
+					break ;
+				case 'o':
+					channel->setOperator(target, type);
+					mode+= c;
+					break;
+				case 'l':
+					channel->setMaxUsers(limits);
+					mode+= c;
+					break;
+				case 'i':
+					channel->setInviteOnly(type);
+					mode+= c;
+					continue ;
+				default:
+					//ERR_UMODEUNKNOWNFLAG
+					break;
+			}
 		}
-		if (msg.args()[1] == "-o") {
-			// le user se 'deoppe'
+		//message target->write
+		if (u != target) {
+
+			//u->write
 		}
 	}
+	else {
+		//u->reply(ERR_CHANOPRIVSNEEDED(u->nickname(), channel->name()));
+	}
 
-	// Channel MODE
-	// Paramètres: <canal> {[+|-]|o|p|s|i|t|n|b|v} [<limite>] [<utilisateur>] [<masque de bannissement >]
-	if (msg.args().size() == 5) {
-		Channel *channel;
+}
 
-		channel = _network.getChannel(msg.args()[0]);
-		if (!channel) {
-			std::cout << "ERR_NOSUCHCHANNEL" << std::endl;
-		}
+int		IrcServer::MODE(User &u, Message msg) {
 
-		// check msg[2] = flags : {[+|-]|o|p|s|i|t|n|b|v}
-		// check msg[3] = <limite>
-		// check msg[4] = <user>
-		// check msg[5] = <masque de bannissement >
+	if (msg.args().size() < 1)
+		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
+
+	/* channel MODE */
+	if (msg.args()[0][0] == '#') {
+
+		Channel *channel = _network.getChannel(msg.args()[0]);
+		if (!channel)
+			return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
+		_channelMODE(&u, msg, channel);
+	}
+
+	/* user MODE */
+	else {
+
+		User *target = _network.getByNickname(msg.args()[0]);
+		if (!target)
+			return u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[0]));
+		_userMODE(&u, msg, target);
 	}
 
 	return (1);

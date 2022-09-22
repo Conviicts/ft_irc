@@ -16,8 +16,8 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 ### sujet
 
 - [x] prendre deux parametres : `./ircserv <port> <password>`
-- [ ] gérer plusieurs clients simultanément sans jamais bloquer
-- [ ] s'authentifier
+- [x] gérer plusieurs clients simultanément sans jamais bloquer
+- [x] s'authentifier
 - [x] définir un nickname
 - [x] un username
 - [x] rejoindre un channel
@@ -30,15 +30,15 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 ### Commandes
 
 - [x] NICK
-- [x] JOIN
+- [ ] JOIN
 - [x] USER
-- [x] QUIT
-- [x] OPER
+- [ ] QUIT
+- [ ] OPER
 - [x] PASS
-- [x] PRIVMSG
-- [x] NOTICE
-- [x] TOPIC
-- [x] KILL
+- [ ] PRIVMSG
+- [ ] NOTICE
+- [ ] TOPIC
+- [ ] KILL
 - [ ] INVITE
 - [ ] KICK
 - [ ] LIST

@@ -10,7 +10,7 @@
 //            ERR_NEEDMOREPARAMS              RPL_YOUREOPER
 //            ERR_NOOPERHOST                  ERR_PASSWDMISMATCH
 
-int IrcServer::OPER(User &u, Message msg) {
+int		IrcServer::OPER(User &u, Message msg) {
 
 	if (msg.args().size() != 2) {
 		u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));

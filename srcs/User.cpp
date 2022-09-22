@@ -3,7 +3,7 @@
 
 User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
-	_channel(NULL),
+	// _channel(NULL),
 	_registered(false),
 	_mode(false),
 	_state(0),
@@ -60,14 +60,9 @@ std::string				User::getResponse(User &u, std::string const &reponse) {
 	return reponse;
 }
 
-Channel					*User::getChannel() const { return _channel; };
-
-void					User::joinChannel(User &u, Channel *channel) {
+void					User::joinChannel(User &u, Channel *channel) { // WOOOOOOOOOOOOOOOOO
 	channel->addUser(this);
-	_channel = channel;
 
 	channel->broadcast(":" + u.nickname() + " JOIN :" + channel->name());
 	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
 }
-
-void					User::setChannel(Channel *channel) { _channel = channel; }

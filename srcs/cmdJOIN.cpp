@@ -1,17 +1,16 @@
 #include "IrcServer.hpp"
 
+// IL FAUT CHECK LE MODE SUR INVITATION DU CHANNEL
+// ET DANS CE CAS SEUL LES USER INVITED PEUVENT JOIN
+// BISOUS 😘
+
 int		IrcServer::JOIN(User &u, Message msg) {
 
 	if (msg.args().size() < 1)
 		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
 	std::string password = msg.args().size() > 1 ? msg.args()[1] : "";
 
-	Channel *channel = u.getChannel();
-	if (channel) {
-		return u.reply(u, ERR_TOOMANYCHANNELS(u.nickname()));
-		return (0);
-	}
-	channel = _network.getChannel(msg.args()[0]);
+	Channel *channel = _network.getChannel(msg.args()[0]);
 	if (!channel)
 		channel = _network.createChannel(msg.args()[0], msg.args()[1], &u);
 	if (channel->maxUsers() > 0 && channel->clientSize() >= channel->maxUsers()){

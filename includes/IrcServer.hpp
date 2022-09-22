@@ -43,14 +43,14 @@ class IrcServer {
 
 		State			state() const; // get the server state
 
-		class UserNotFoundException : public std::exception {
+		class UserNotFoundException : public std::exception { // est-ce que je suis capable ?
 			public:
 				virtual const char * what() const throw() {
 					return ("User not found");
 				}
 		};
 
-		class ChannelNotFoundException : public std::exception {
+		class ChannelNotFoundException : public std::exception { // est-ce que je suis ?
 			public:
 				virtual const char * what() const throw() {
 					return ("Channel not found");
@@ -76,6 +76,9 @@ class IrcServer {
 
 		void			disconnect(TCP::TCPSocket *socket, const std::string &reason) throw(); // Disconnect a client
 		void			disconnect(User &u, const std::string &reason, bool notifyUser = 0) throw(); // Disconnect a client
+
+		void			_channelMODE(User *u, Message msg, Channel *channel);
+		void			_userMODE(User *u, Message msg, User *target);
 		
 		IrcServer(const IrcServer &ref);
 		IrcServer &operator=(const IrcServer &ref);

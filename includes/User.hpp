@@ -43,12 +43,9 @@ class User : public TCP::BasicConnection {
 		int						reply(User &u, std::string const &reponse);
 		void					welcome(User &u);
 
-		Channel					*getChannel() const;
 		void					joinChannel(User &u, Channel *channel);
-		void					setChannel(Channel *channel);
 
 	private:
-		Channel					*_channel; // std::vector<Channel *> _channel;
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;

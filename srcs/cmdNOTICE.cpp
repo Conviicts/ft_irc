@@ -1,7 +1,7 @@
 #include "IrcServer.hpp"
 #include "ERR_RPL.hpp"
 
-int IrcServer::NOTICE(User &u, Message msg) {
+int		IrcServer::NOTICE(User &u, Message msg) {
 	(void)u;
 	(void)msg;
 
@@ -18,21 +18,21 @@ int IrcServer::NOTICE(User &u, Message msg) {
 	/* -------------------------------------------------------------------------------------------------- */
 
 	if (target.at(0) == '#') {
-		Channel *channel = u.getChannel();
-		if (!channel)
-			return (0);
+		// Channel *channel = u.getChannel();
+		// if (!channel)
+		// 	return (0);
 
-		std::vector<std::string>			users(channel->usersNick());
-		std::vector<std::string>::iterator	i;
+		// std::vector<std::string>			users(channel->usersNick());
+		// std::vector<std::string>::iterator	i;
 		
-		for (i = users.begin(); i != users.end(); i++)
-			if (*i == u.nickname())
-				break;
-		if (i == users.end()) {
-			u.reply(u, ERR_CANNOTSENDTOCHAN(u.nickname(), target));
-			return (0);
-		}
-		channel->broadcast(RPL_NOTICE(u.getPrefix(), target, message));
+		// for (i = users.begin(); i != users.end(); i++)
+		// 	if (*i == u.nickname())
+		// 		break;
+		// if (i == users.end()) {
+		// 	u.reply(u, ERR_CANNOTSENDTOCHAN(u.nickname(), target));
+		// 	return (0);
+		// }
+		// channel->broadcast(RPL_NOTICE(u.getPrefix(), target, message));
 		return (1);
 	}
 	User *dest = _network.getByNickname(target);

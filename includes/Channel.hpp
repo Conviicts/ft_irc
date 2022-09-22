@@ -31,6 +31,8 @@ class Channel {
 		int							clientSize() const;
 		std::vector<std::string>	usersNick();
 
+		void						setOperator(User *user, bool op);
+
 		void						setInviteOnly(bool mode);
 		void						invite(User *user);
 		void						removeInvited(User &user);

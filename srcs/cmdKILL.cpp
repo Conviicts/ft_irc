@@ -30,11 +30,14 @@ int		IrcServer::KILL(User &u, Message msg) {
 	if(u.isOperator() == false)
 		return u.reply(u, ERR_NOPRIVILEGES(u.nickname()));
 
+	/* CHECK fonction message --------------------------------------------------------------------------- */
 	std::string message;
 
 	for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
 		message.append(*it + " ");
 	message = message.at(0) == ':' ? message.substr(1) : message;
+	/* -------------------------------------------------------------------------------------------------- */
+
 	disconnect(*target, message, true);
 
 	return (1);

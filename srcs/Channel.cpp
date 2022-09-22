@@ -2,10 +2,11 @@
 #include <algorithm>
 
 Channel::Channel(const std::string &name, const std::string &password, User *admin) :
-	_name(name),
-	_password(password),
+	_invite_only(false),
 	_admin(admin),
-	_invite_only(false) {
+	_name(name),
+	_password(password)
+{
 
 }
 
@@ -23,7 +24,6 @@ void						Channel::addUser(User *user) { _users.push_back(user); }
 
 void						Channel::delUser(User *user) {
 	_users.erase(std::remove(_users.begin(), _users.end(), user), _users.end());
-	user->setChannel(NULL);
 	if (_users.empty())
 		return;
 	if (_admin == user) {
@@ -62,16 +62,30 @@ std::vector<std::string>	Channel::usersNick() {
 	return nicks;
 }
 
-void Channel::setInviteOnly(bool mode) { _invite_only = mode; }
+void Channel::setOperator(User *user, bool op) {
 
-void Channel::invite(User *user) { _invited.push_back(user); }
+	if (!op) {
 
-void Channel::removeInvited(User &user) {
+		for (std::vector<User*>::iterator it = _operator.begin(); it != _operator.end(); it++) {
+			if (*it == user) {
+				_operator.erase(it);
+				break ;
+			}
+		}
+		return ;
+	}
+	else
+		_operator.push_back(user);
+}
 
-	for (iterator it = _invited.begin(); it != _invited.end(); ++it)
-	{
-		if ((*it).nickname() == user.nickname())
-		{
+void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
+
+void						Channel::invite(User *user) { _invited.push_back(user); }
+
+void						Channel::removeInvited(User &user) {
+
+	for (std::vector<User*>::iterator it = _invited.begin(); it != _invited.end(); ++it) {
+		if ((*it)->nickname() == user.nickname()) {
 			_invited.erase(it);
 			return ;
 		}
@@ -80,7 +94,7 @@ void Channel::removeInvited(User &user) {
 
 bool						Channel::isOnChannel(User const *user) const {
 
-	std::vector<User *>::const_iterator it = _users.begin();
+	std::vector<User*>::const_iterator it = _users.begin();
 
 	for (; it != _users.end(); it++) {
 		if (*it == user)
