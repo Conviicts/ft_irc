@@ -5,22 +5,37 @@
 // BISOUS 😘
 
 int		IrcServer::JOIN(User &u, Message msg) {
-
+	if (u.state() != 2)
+		return (u.reply(u, ERR_NOTREGISTERED(u.nickname())));
+	if (!msg.args().size())
+		return (u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), "JOIN")));
+	
 	if (msg.args().size() < 1)
 		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-	std::string password = msg.args().size() > 1 ? msg.args()[1] : "";
+	for (std::vector<std::string>::const_iterator it = msg.args().begin(); it != msg.args().end(); ++it) {
+		if (it->at(0) != '#') {
+			u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), *it));
+			continue ;
+		}
+		Channel *c = _network.getChannel(*it);
+		bool newChan = 0;
+		if (!c) {
+			c = new Channel(*it, "", &u);
+			_network.add(c);
+			newChan = 1;
+		} else if (c->isOnChannel(&u)) {
+			continue ;
+		} else {
+			bool isInvited = c->isInvited(u);
 
-	Channel *channel = _network.getChannel(msg.args()[0]);
-	if (!channel)
-		channel = _network.createChannel(msg.args()[0], msg.args()[1], &u);
-	if (channel->maxUsers() > 0 && channel->clientSize() >= channel->maxUsers()){
-		u.reply(u, ERR_CHANNELISFULL(u.nickname()));
-		return (0);
+			if (!isInvited && c->isInviteOnly()) {
+				u.reply(u, ERR_INVITEONLYCHAN(c->name()));
+				continue ;
+			}
+			//TODO: check password
+		}
+		c->addUser(&u, newChan == 1 ? UserMode(UserMode::CREATOR) : UserMode(UserMode::USER));
+		c->broadcast(u.nickname() + " JOIN : " + c->name());
 	}
-	if (channel->password() != password) {
-		u.reply(u, ERR_BADCHANNELKEY(u.nickname()));
-		return (0);
-	}
-	u.joinChannel(u, channel);
 	return (1);
 }
