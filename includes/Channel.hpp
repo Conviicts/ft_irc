@@ -13,8 +13,10 @@ class Channel {
 		Channel(const std::string &name, const std::string &password, User *admin);
 		~Channel();
 
-		User						*admin() const;
 		const std::string			&name() const;
+
+		int							type() const;
+		void						setType(int type);
 
 		const std::string			&password() const;
 		void						setPassword(const std::string &password);
@@ -48,6 +50,7 @@ class Channel {
 		Channel &operator=(const Channel &);
 
 		int							_maxUsers; // size_t
+		int							_type;
 		bool						_invite_only;
 		User						*_admin;
 		std::string					_name;

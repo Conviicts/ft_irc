@@ -2,6 +2,7 @@
 #include <algorithm>
 
 Channel::Channel(const std::string &name, const std::string &password, User *admin) :
+	_type(name.c_str()[0] == '#' ? 0 : 1),
 	_invite_only(false),
 	_admin(admin),
 	_name(name),
@@ -12,9 +13,10 @@ Channel::Channel(const std::string &name, const std::string &password, User *adm
 
 Channel::~Channel() { }
 
-User						*Channel::admin() const { return _admin; }
-
 const std::string			&Channel::name() const { return _name; }
+
+int							Channel::type() const { return _type; }
+void						Channel::setType(int type) { _type = type; }
 
 const std::string			&Channel::password() const { return _password; }
 
