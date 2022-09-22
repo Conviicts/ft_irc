@@ -23,6 +23,7 @@ class Channel {
 
 		void						addUser(User *user, const UserMode &mode);
 		void						delUser(User *user);
+		UserMode 					*getUser(User *user);
 
 		int							maxUsers() const;
 		void						setMaxUsers(int maxUsers);
@@ -30,11 +31,13 @@ class Channel {
 		const std::string			&getTopic() const;
 		void						setTopic(std::string const & topic);
 
-		void						broadcast(const std::string &msg);
+		void						broadcast(User *user, const std::string &msg);
 		void						kick(User *user, User *target, const std::string &reason);
 
 		int							clientSize() const;
 		std::vector<std::string>	usersNick();
+
+		bool 						canWrite(User *user);
 
 
 		void						setInviteOnly(bool mode);

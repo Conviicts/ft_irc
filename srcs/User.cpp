@@ -65,6 +65,6 @@ std::string				User::getResponse(User &u, std::string const &reponse) {
 void					User::joinChannel(User &u, Channel *channel) {
 	channel->addUser(&u, UserMode(2));
 
-	channel->broadcast(":" + u.nickname() + " JOIN :" + channel->name());
+	channel->broadcast(&u, ":" + u.nickname() + " JOIN :" + channel->name());
 	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
 }

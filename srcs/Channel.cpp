@@ -42,15 +42,17 @@ void						Channel::setMaxUsers(int maxUsers) { _maxUsers = maxUsers; }
 const std::string			&Channel::getTopic() const { return _topic; }
 void						Channel::setTopic(std::string const & topic) { _topic = topic; }
 
-void						Channel::broadcast(const std::string &msg) {
+void						Channel::broadcast(User *user, const std::string &msg) {
 	for (std::map<User *, UserMode>::iterator it = _users.begin(); it != _users.end(); ++it) {
 		User *u(it->first);
+		if (u->nickname() == user->nickname())
+			continue;
 		u->write(msg);
 	}
 }
 
 void						Channel::kick(User *user, User *target, const std::string &reason) {
-	broadcast(":" + user->nickname() + " KICK " + _name + " " + target->nickname() + " :" + reason);
+	broadcast(user, ":" + user->nickname() + " KICK " + _name + " " + target->nickname() + " :" + reason);
 	delUser(target);
 	std::cout << user->nickname() << "kicked" << target->nickname() << "from channel " << _name << std::endl;
 }
@@ -67,7 +69,17 @@ std::vector<std::string>	Channel::usersNick() {
 	return nicks;
 }
 
+UserMode 					*Channel::getUser(User *user) {
+	std::map<User *, UserMode>::iterator it(_users.find(user));
+	return (it != _users.end() ? &it->second : NULL);
+}
 
+bool						Channel::canWrite(User *user) {
+	UserMode *u = getUser(user);
+	if (u)
+		return (u->canTalk());
+	return (false);
+}
 
 void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
 
