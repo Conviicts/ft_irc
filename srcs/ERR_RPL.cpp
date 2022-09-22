@@ -157,8 +157,8 @@ std::string ERR_UNKNOWNMODE() {
 	return "[472] ";
 }
 
-std::string ERR_INVITEONLYCHAN(std::string nick) {
-	return "[473] " + nick + "<canal> :Cannot join channel (+i)";
+std::string ERR_INVITEONLYCHAN(std::string channel) {
+	return "[473] " + channel + " :Cannot join channel (+i)";
 }
 
 std::string ERR_BANNEDFROMCHAN(std::string nick) {
@@ -167,11 +167,6 @@ std::string ERR_BANNEDFROMCHAN(std::string nick) {
 
 std::string ERR_BADCHANNELKEY(std::string nick) {
 	return "[475] " + nick + ":Cannot join channel (+k)";
-}
-
-
-std::string ERR_INVITEONLYCHAN() {
-	return "[473] ";
 }
 
 std::string ERR_NOPRIVILEGES(std::string nick) {
