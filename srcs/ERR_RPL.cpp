@@ -129,6 +129,10 @@ std::string ERR_USERONCHANNEL(std::string nick, std::string channel) {
 	return "[443] " + nick + ": " + channel + ":is already on channel";
 }
 
+std::string ERR_NOTREGISTERED(std::string nick) {
+	return "[451] " + (nick.empty() ?  "*" : nick) + " " + ":You have not registered";
+}
+
 std::string ERR_NEEDMOREPARAMS(std::string nick, std::string arg) {
 	return "[461] " + (nick.empty() ?  "*" : nick) + " " + arg + " :Not enough parameters";
 }
