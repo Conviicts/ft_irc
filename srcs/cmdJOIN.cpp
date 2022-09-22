@@ -35,7 +35,7 @@ int		IrcServer::JOIN(User &u, Message msg) {
 			//TODO: check password
 		}
 		c->addUser(&u, newChan == 1 ? UserMode(UserMode::CREATOR) : UserMode(UserMode::USER));
-		c->broadcast(u.nickname() + " JOIN : " + c->name());
+		c->broadcast(&u, u.nickname() + " JOIN : " + c->name());
 	}
 	return (1);
 }
