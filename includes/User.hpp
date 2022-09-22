@@ -29,6 +29,9 @@ class User : public TCP::BasicConnection {
 		const std::string		&realname() const;
 		void					setRealname(const std::string &realname);
 
+		int						channelsCount();
+		void					setChannelsCount(const int count);
+
 		int						state() const;
 		void					setState(int state);
 
@@ -52,6 +55,7 @@ class User : public TCP::BasicConnection {
 		bool					_registered;
 		bool					_mode; // operator or not
 		int						_state;
+		int						_channelsCount;
 
 	protected:
 		time_t					_idle;

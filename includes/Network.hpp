@@ -15,7 +15,7 @@ class Network {
         typedef std::map<TCP::TCPSocket *, TCP::BasicConnection *>	Connection;
         typedef std::map<std::string, User *>	                    Users;
 	    typedef std::list<TCP::BasicConnection *>				    Zombies;
-	    typedef std::vector<Channel *>				                Channels;
+	    typedef std::map<std::string, Channel *>		            Channels;
 
 
 
@@ -23,8 +23,11 @@ class Network {
 	    ~Network() throw();
 
         void				    add(User *user);
+	    void				    add(Channel *channel);
 	    void				    remove(User *user) throw();
+        void                    remove(const Channel *channel) throw();
         void				    clear() throw();
+
 	    TCP::BasicConnection    *getUserBySocket(TCP::TCPSocket *socket);
         User                    *getByNickname(const std::string &name);
 

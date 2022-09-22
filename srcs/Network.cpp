@@ -11,10 +11,19 @@ void						Network::add(User *user) {
 		_users[user->nickname()] = user;
 }
 
+void						Network::add(Channel *channel) {
+	_channels[channel->name()] = channel;
+}
+
 void						Network::remove(User *user) throw() {
 	if (!user->count())
 		_connections.erase(user->socket());
 	_users.erase(user->nickname());
+}
+
+void						Network::remove(const Channel *channel) throw() {
+	_channels.erase(channel->name());
+	delete channel;
 }
 
 void						Network::clear() throw() {
@@ -22,6 +31,8 @@ void						Network::clear() throw() {
 		delete it->second;
 	for (Zombies::iterator it = _zombies.begin(); it != _zombies.end(); ++it)
 		delete *it;
+	for (Channels::iterator it = _channels.begin(); it != _channels.end(); ++it)
+		delete it->second;
 }
 
 TCP::BasicConnection		*Network::getUserBySocket(TCP::TCPSocket *socket) {
@@ -55,16 +66,6 @@ TCP::BasicConnection		*Network::nextZombie() {
 }
 
 Channel						*Network::getChannel(const std::string &name) {
-	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
-		if ((*it)->name() == name)
-			return *it;
-	}
-	return NULL;
+	Channels::const_iterator i = _channels.find(name);
+	return (i != _channels.end() ? i->second : NULL);
 }
-
-Channel						*Network::createChannel(const std::string &name, const std::string &password, User *admin) {
-	Channel *channel = new Channel(name, password, admin);
-	_channels.push_back(channel);
-	return channel;
-}
-

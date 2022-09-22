@@ -22,6 +22,8 @@ void 					User::setUsername(const std::string &username) { _username = username;
 const std::string		&User::realname() const { return (_realname); }
 void 					User::setRealname(const std::string &realname) { _realname = realname; }
 
+int						User::channelsCount() { return (_channelsCount); }
+void					User::setChannelsCount(const int count) { _channelsCount = count; }
 
 bool					User::isRegistered() const { return (_registered); }
 
@@ -60,8 +62,8 @@ std::string				User::getResponse(User &u, std::string const &reponse) {
 	return reponse;
 }
 
-void					User::joinChannel(User &u, Channel *channel) { // WOOOOOOOOOOOOOOOOO
-	channel->addUser(this);
+void					User::joinChannel(User &u, Channel *channel) {
+	channel->addUser(&u, UserMode(2));
 
 	channel->broadcast(":" + u.nickname() + " JOIN :" + channel->name());
 	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;

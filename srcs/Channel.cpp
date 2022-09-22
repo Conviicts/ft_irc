@@ -20,16 +20,17 @@ const std::string			&Channel::password() const { return _password; }
 
 void						Channel::setPassword(const std::string &password) { _password = password; }
 
-void						Channel::addUser(User *user) { _users.push_back(user); }
+void						Channel::addUser(User *user, const UserMode &mode) {
+	_users[user] = mode;
+	user->setChannelsCount(user->channelsCount() + 1);
+	std::set<std::string>::const_iterator it = _invited.find(user->nickname());
+	if (it != _invited.end())
+		_invited.erase(it);
+}
 
 void						Channel::delUser(User *user) {
-	_users.erase(std::remove(_users.begin(), _users.end(), user), _users.end());
-	if (_users.empty())
-		return;
-	if (_admin == user) {
-		_admin = _users.begin()[0];
-		std::cout << "Channel: " << _name << " new admin: " << _admin->nickname() << std::endl;
-	}
+	_users.erase(user);
+	user->setChannelsCount(user->channelsCount() - 1);
 }
 
 int							Channel::maxUsers() const { return _maxUsers; }
@@ -40,8 +41,10 @@ const std::string			&Channel::getTopic() const { return _topic; }
 void						Channel::setTopic(std::string const & topic) { _topic = topic; }
 
 void						Channel::broadcast(const std::string &msg) {
-	for (std::vector<User *>::iterator it = _users.begin(); it != _users.end(); ++it)
-		(*it)->write(msg);
+	for (std::map<User *, UserMode>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		User *u(it->first);
+		u->write(msg);
+	}
 }
 
 void						Channel::kick(User *user, User *target, const std::string &reason) {
@@ -55,74 +58,34 @@ int							Channel::clientSize() const { return _users.size(); }
 std::vector<std::string>	Channel::usersNick() {
 	std::vector<std::string> nicks;
 
-	for (std::vector<User *>::const_iterator it = _users.begin(); it != _users.end(); it++) {
-		User *user = *it;
-		nicks.push_back((_admin == user ? "@" : "") + (*it)->nickname());
+	for (std::map<User *, UserMode>::const_iterator it = _users.begin(); it != _users.end(); it++) {
+		User *user = it->first;
+		nicks.push_back((_admin == user ? "@" : "") + it->first->nickname());
 	}
 	return nicks;
 }
 
-void Channel::setOperator(User *user, bool op) {
 
-	if (!op) {
-
-		for (std::vector<User*>::iterator it = _operator.begin(); it != _operator.end(); it++) {
-			if (*it == user) {
-				_operator.erase(it);
-				break ;
-			}
-		}
-		return ;
-	}
-	else
-		_operator.push_back(user);
-}
 
 void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
 
-void						Channel::invite(User *user) { _invited.push_back(user); }
+void						Channel::invite(User *user) { _invited.insert(user->nickname()); }
 
-void						Channel::removeInvited(User &user) {
-
-	for (std::vector<User*>::iterator it = _invited.begin(); it != _invited.end(); ++it) {
-		if ((*it)->nickname() == user.nickname()) {
-			_invited.erase(it);
-			return ;
-		}
-	}
-}
 
 bool						Channel::isOnChannel(User const *user) const {
 
-	std::vector<User*>::const_iterator it = _users.begin();
+	std::map<User *, UserMode>::const_iterator it = _users.begin();
 
 	for (; it != _users.end(); it++) {
-		if (*it == user)
+		if (it->first == user)
 			return true;
 	}
 	return false;
 }
 
-bool						Channel::isOperator(User const *user) const {
-
-	std::vector<User*>::const_iterator it = _operator.begin();
-
-	for (; it != _operator.end(); it++) {
-		if (*it == user)
-			return true;
-	}
-	return false;
-}
 
 bool						Channel::isInvited(User const &user) const {
-
-	std::vector<User*>::const_iterator it = _invited.begin();
-
-	for (; it != _invited.end(); it++) {
-		if (*it == &user)
-			return true;
-	}
-	return false;
+	return _invited.find(user.nickname()) != _invited.end();
 }
 
 bool						Channel::isInviteOnly() const { return _invite_only; }
