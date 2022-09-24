@@ -64,7 +64,13 @@ std::string				User::getResponse(User &u, std::string const &reponse) {
 
 void					User::joinChannel(User &u, Channel *channel) {
 	channel->addUser(&u, UserMode(2));
+	std::string users = "";
+	std::vector<std::string> usersList = channel->usersNick();
+	for (std::vector<std::string>::iterator it = usersList.begin(); it != usersList.end(); it++) {
+		users += *it + " ";
+	}
+	u.reply(u, RPL_NAMREPLY(u.nickname(), channel->name(), users));
+	u.reply(u, RPL_ENDOFNAMES(u.nickname(), channel->name()));
 
 	channel->broadcast(&u, ":" + u.nickname() + " JOIN :" + channel->name());
-	std::cout << u.nickname() << " JOIN :" << channel->name() << std::endl;
 }
