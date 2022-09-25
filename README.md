@@ -32,7 +32,7 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 - [x] NICK
 - [ ] JOIN
 - [x] USER
-- [ ] QUIT
+- [x] QUIT
 - [ ] OPER
 - [x] PASS
 - [ ] PRIVMSG

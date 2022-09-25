@@ -3,7 +3,7 @@
 int		IrcServer::QUIT(User &u, Message msg) {
 
 	if (u.state() != 2)
-		disconnect(u, "QUIT", true);
+		disconnect(u, "Client Quit", true);
 	else
 		disconnect(u, msg.args()[0], false);
 
