@@ -9,8 +9,6 @@ int main(int ac, char **av) {
         return 1;
     }
     IrcServer::State state = IrcServer::STARTED;
-
-    std::cout << "Server is ready to accept connections." << std::endl;
     while (state != IrcServer::CLOSED) {
         try {
             IrcServer server(av);

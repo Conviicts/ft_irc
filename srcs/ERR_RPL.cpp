@@ -1,9 +1,5 @@
 # include "ERR_RPL.hpp"
 
-// std::string RPL_WELCOME(std::string nick, std::string user, std::string host) {
-//    return "001 " + nick +" :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host);
-// }
-
 /* -------------------------------------------------------------------------- */
 /* REPLIES                                                                    */
 /* -------------------------------------------------------------------------- */
@@ -25,7 +21,7 @@ std::string RPL_PART(std::string source, std::string channel) {
 }
 
 std::string RPL_WELCOME(std::string nick) {
-	return "001 " + nick + " :Welcome to the Internet Relay Network!";
+	return "001 " + (nick.empty() ?  "*" : nick) + " :Welcome to the Internet Relay Network!";
 }
 
 std::string RPL_YOURHOST(std::string nick, std::string servername, std::string version) {

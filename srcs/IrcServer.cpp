@@ -35,7 +35,15 @@ IrcServer::~IrcServer() { }
 IrcServer::State    IrcServer::state() const { return _state; }
 
 void                IrcServer::run() {
-    std::cout << "Starting server on port " << _port << std::endl;
+    std::cout << "------------------------------------------------     " << std::endl;
+    std::cout << "______________________ .______________________       " << std::endl;
+    std::cout << "\\_   _____/\\__    ___/ |   \\______   \\_   ___ \\ " << std::endl;
+    std::cout << " |    __)    |    |    |   ||       _/    \\  \\/    " << std::endl;
+    std::cout << " |     \\     |    |    |   ||    |   \\     \\____  " << std::endl;
+    std::cout << " \\___  /     |____|____|___||____|_  /\\______  /   " << std::endl;
+    std::cout << "     \\/          /_____/           \\/        \\/   " << std::endl;
+    std::cout << "------------------------------------------------     " << std::endl;
+    std::cout << "Server started on port: " << _port << std::endl;
     if (!_init) {
         _server.listen(_port);
         _server.setMaxConnections(20);
@@ -52,7 +60,7 @@ void                IrcServer::run() {
         TCP::TCPSocket *newSocket;
         while ((newSocket = _server.getNextNewConnection())) {
             User *u = new User(newSocket);
-            std::cout << "New client connected: " << newSocket->ip() << std::endl;
+            std::cout << "New client connected: " << newSocket->host() << std::endl;
             _network.add(u);
         }
         TCP::TCPSocket *socket;
@@ -71,7 +79,7 @@ void                IrcServer::run() {
                     }
                     if (line.empty())
                         continue ;
-                    std::cout << "Received: " << line << std::endl;
+                    // std::cout << "Received: " << line << std::endl;
                     Message msg = Message(line);
                     execute(_network.getUserBySocket(socket), msg);
                 }
@@ -110,7 +118,6 @@ void                IrcServer::flushZombies() {
 
 void                IrcServer::disconnect(TCP::TCPSocket *socket, const std::string &reason) throw() {
     TCP::BasicConnection *c = _network.getUserBySocket(socket);
-    std::cout << c->socket()->fd() << std::endl;
 	disconnect(*static_cast<User *>(c), reason);
 }
 

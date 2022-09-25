@@ -44,12 +44,11 @@ int						User::reply(User &u, std::string const &reponse) {
 }
 
 void					User::welcome(User &u) {
-	std::cout << _state << " " << _username << " " << _nickname << " " << _realname << std::endl;
 	if (_state != 1 || _username.empty() || _realname.empty() || _nickname.empty())
 		return ;
 	_state = 2;
 	reply(u, RPL_WELCOME(_nickname));
-	std::cout << u.socket()->host() << " is not known as " << _nickname << std::endl;
+	// std::cout << u.socket()->host() << " is not known as " << _nickname << std::endl;
 }
 
 std::string				User::getResponse(User &u, std::string const &reponse) {
