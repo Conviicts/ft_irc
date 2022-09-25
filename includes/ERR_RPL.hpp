@@ -5,7 +5,9 @@
 
 // RPL
 std::string RPL_NOTICE(std::string source, std::string target, std::string message);
+std::string RPL_PONG(std::string source, std::string message);
 std::string RPL_JOIN(std::string source, std::string channel);
+std::string RPL_PART(std::string source, std::string channel);
 std::string RPL_WELCOME(std::string nick);
 std::string RPL_YOURHOST(std::string nick, std::string servername, std::string version);
 std::string RPL_CREATED(std::string nick, std::string date);
@@ -25,6 +27,7 @@ std::string RPL_YOUROPER(std::string nick, std::string arg1, std::string arg2);
 std::string RPL_NOTONCHANNEL();
 
 // ERR
+std::string ERR_NOORIGIN(const std::string nick);
 std::string ERR_NOSUCHNICK(std::string nick, std::string arg);
 std::string ERR_NOTREGISTERED(std::string nick);
 std::string ERR_NOSUCHCHANNEL(std::string nick, std::string arg);

@@ -12,8 +12,16 @@ std::string RPL_NOTICE(std::string source, std::string target, std::string messa
 	return ":" + source + " NOTICE " + target + " :" + message;
 }
 
+std::string RPL_PONG(std::string source, std::string message) {
+	return ":" + source + " PONG :" + message;
+}
+
 std::string RPL_JOIN(std::string source, std::string channel) {
 	return ":" + source + " JOIN :" + channel;
+}
+
+std::string RPL_PART(std::string source, std::string channel) {
+	return ":" + source + " PART :" + channel;
 }
 
 std::string RPL_WELCOME(std::string nick) {
@@ -104,6 +112,11 @@ std::string ERR_NOSUCHCHANNEL(std::string nick, std::string arg) {
 std::string	ERR_TOOMANYCHANNELS(std::string nick) {
 	return "405 " + nick + ":You have joined too many channels";
 }
+
+std::string ERR_NOORIGIN(const std::string nick) {
+	return "409 " + nick + ":No origin specified";
+}
+
 std::string ERR_NONICKNAMEGIVEN(std::string nick) {
 	return "431 " + (nick.empty() ?  "*" : nick) + ":No nickname given";
 }
