@@ -16,7 +16,7 @@ int		IrcServer::PRIVMSG(User &u, Message msg) {
 		Channel *c = _network.getChannel(target);
 		if (!c)
 			return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
-		if (!c->isOnChannel(&u))
+		if (!c->getUser(&u))
 			return u.reply(u, ERR_NOTONCHANNEL(u.nickname(), msg.args()[0]));
 		c->broadcast(&u, ":" + u.getPrefix() + " PRIVMSG " + target + " :" + message);
 	} else {
