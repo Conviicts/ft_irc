@@ -43,8 +43,7 @@ class Channel {
 		void						setInviteOnly(bool mode);
 		void						invite(User *user);
 
-		bool						isOnChannel(User const *user) const;
-		bool						isOperator(User const *user) const;
+		bool						isChanOp(User const *user) const;
 		bool						isInvited(User const & user) const;
 		bool						isInviteOnly() const;
 

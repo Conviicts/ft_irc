@@ -86,18 +86,6 @@ void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
 void						Channel::invite(User *user) { _invited.insert(user->nickname()); }
 
 
-bool						Channel::isOnChannel(User const *user) const {
-
-	std::map<User *, UserMode>::const_iterator it = _users.begin();
-
-	for (; it != _users.end(); it++) {
-		if (it->first == user)
-			return true;
-	}
-	return false;
-}
-
-
 bool						Channel::isInvited(User const &user) const {
 	return _invited.find(user.nickname()) != _invited.end();
 }
