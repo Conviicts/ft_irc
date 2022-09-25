@@ -23,7 +23,7 @@ int		IrcServer::JOIN(User &u, Message msg) {
 			c = new Channel(*it, "", &u);
 			_network.add(c);
 			newChan = 1;
-		} else if (c->isOnChannel(&u)) {
+		} else if (c->getUser(&u)) {
 			continue ;
 		} else {
 			bool isInvited = c->isInvited(u);
