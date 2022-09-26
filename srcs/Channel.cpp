@@ -74,17 +74,9 @@ UserMode 					*Channel::getUser(User *user) {
 	return (it != _users.end() ? &it->second : NULL);
 }
 
-bool						Channel::canWrite(User *user) {
-	UserMode *u = getUser(user);
-	if (u)
-		return (u->canTalk());
-	return (false);
-}
-
 void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
 
 void						Channel::invite(User *user) { _invited.insert(user->nickname()); }
-
 
 bool						Channel::isInvited(User const &user) const {
 	return _invited.find(user.nickname()) != _invited.end();

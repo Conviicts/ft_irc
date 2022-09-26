@@ -9,10 +9,10 @@ class UserMode {
         };
 
         UserMode();
-        UserMode(int mode);
+        UserMode(Flag mode);
         ~UserMode();
 
-        bool canTalk() const;
+        bool isChanOP() const;
     private:
-        int        _mode;
+        Flag        _mode;
 };

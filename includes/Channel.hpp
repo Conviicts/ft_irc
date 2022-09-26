@@ -37,9 +37,6 @@ class Channel {
 		int							clientSize() const;
 		std::vector<std::string>	usersNick();
 
-		bool 						canWrite(User *user);
-
-
 		void						setInviteOnly(bool mode);
 		void						invite(User *user);
 
