@@ -27,11 +27,11 @@ int		IrcServer::INVITE(User &u, Message msg) {
 	if (!channel)
 		return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[1]));
 
-	if (channel->isOnChannel(&u)) {
+	if (channel->getUser(&u)) {
 
-		if (channel->isOperator(&u)) {
+		// if (channel->isChanOp(&u)) {
 	
-			if (channel->isOnChannel(target) == false) {
+			if (channel->getUser(target) == false) {
 
 				channel->invite(target);
 				target->reply(*target, RPL_INVITING(u.getPrefix(), target->nickname(), channel->name())); // use reply ou write ?
@@ -39,9 +39,9 @@ int		IrcServer::INVITE(User &u, Message msg) {
 			}
 			else
 				u.reply(u, ERR_USERONCHANNEL(target->nickname(), channel->name()));
-		}
-		else
-			u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), channel->name()));
+		// }
+		// else
+		// 	u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), channel->name()));
 	}
 	else
 		u.reply(u, ERR_NOTONCHANNEL(u.nickname(), channel->name()));

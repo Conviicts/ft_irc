@@ -60,61 +60,63 @@ void	IrcServer::_userMODE(User *u, Message msg, User *target) {
 }
 
 void	IrcServer::_channelMODE(User *u, Message msg, Channel *channel) {
+	(void)u;
+	(void)msg;
+	(void)channel;
+	// std::string			mode;
+	// int					type = 0;
+	// char				c;
+	// int					limits = -1;
 
-	std::string			mode;
-	int					type = 0;
-	char				c;
-	int					limits = -1;
+	// if (msg.args().size() < 3)
+	// {
+	// 	// 324     RPL_CHANNELMODEIS
+	// 	return ;
+	// }
+	// // msg.args()[3] == user?
+	// User *target = _network.getByNickname(msg.args()[3]);
+	// if (!target) {
 
-	if (msg.args().size() < 3)
-	{
-		// 324     RPL_CHANNELMODEIS
-		return ;
-	}
-	// msg.args()[3] == user?
-	User *target = _network.getByNickname(msg.args()[3]);
-	if (!target) {
-
-		// msg.args()[3] == limits?
-		// est-ce que cest un chiffre ?
-	}
+	// 	// msg.args()[3] == limits?
+	// 	// est-ce que cest un chiffre ?
+	// }
 	
-	if (channel->isOperator(u)) {
+	// if (channel->isOperator(u)) {
 
-		for (int i = 0; (c = msg.args()[1][i]); i++)
-		{
-			switch (c) {
-				case '+':
-				case '-':
-					type = (c == '+');
-					mode =+c;
-					break ;
-				case 'o':
-					channel->setOperator(target, type);
-					mode+= c;
-					break;
-				case 'l':
-					channel->setMaxUsers(limits);
-					mode+= c;
-					break;
-				case 'i':
-					channel->setInviteOnly(type);
-					mode+= c;
-					continue ;
-				default:
-					//ERR_UMODEUNKNOWNFLAG
-					break;
-			}
-		}
-		//message target->write
-		if (u != target) {
+	// 	for (int i = 0; (c = msg.args()[1][i]); i++)
+	// 	{
+	// 		switch (c) {
+	// 			case '+':
+	// 			case '-':
+	// 				type = (c == '+');
+	// 				mode =+c;
+	// 				break ;
+	// 			case 'o':
+	// 				// channel->setOperator(target, type);
+	// 				mode+= c;
+	// 				break;
+	// 			case 'l':
+	// 				channel->setMaxUsers(limits);
+	// 				mode+= c;
+	// 				break;
+	// 			case 'i':
+	// 				channel->setInviteOnly(type);
+	// 				mode+= c;
+	// 				continue ;
+	// 			default:
+	// 				//ERR_UMODEUNKNOWNFLAG
+	// 				break;
+	// 		}
+	// 	}
+	// 	//message target->write
+	// 	if (u != target) {
 
-			//u->write
-		}
-	}
-	else {
-		//u->reply(ERR_CHANOPRIVSNEEDED(u->nickname(), channel->name()));
-	}
+	// 		//u->write
+	// 	}
+	// }
+	// else {
+	// 	//u->reply(ERR_CHANOPRIVSNEEDED(u->nickname(), channel->name()));
+	// }
 
 }
 
