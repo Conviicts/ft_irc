@@ -7,7 +7,7 @@ LIB_DIR		:= libs
 LIBTCP_DIR	:= $(LIB_DIR)/libTcp
 
 
-SRCS		:= $(wildcard srcs/*/*.cpp) $(wildcard srcs/*.cpp)
+SRCS		:= $(wildcard srcs/**/*.cpp) $(wildcard srcs/*.cpp)
 CXX			:= c++
 CXXFLAGS	:= -g -Wall -Wextra -Werror -Ofast -std=c++98 \
 			   -I ./includes -I ./$(LIBTCP_DIR)/includes
