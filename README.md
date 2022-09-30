@@ -30,11 +30,11 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 ### Commandes
 
 - [x] NICK
-- [ ] JOIN
+- [x] PASS
 - [x] USER
 - [x] QUIT
+- [X] JOIN
 - [ ] OPER
-- [x] PASS
 - [ ] PRIVMSG
 - [ ] NOTICE
 - [ ] TOPIC
@@ -42,9 +42,9 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 - [ ] INVITE
 - [ ] KICK
 - [ ] LIST
-- [ ] NAMES
+- [X] NAMES
 - [ ] PART
-- [ ] PING
+- [X] PING
 - [ ] MODE
 - [ ] WHO
 

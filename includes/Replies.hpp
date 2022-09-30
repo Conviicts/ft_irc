@@ -46,13 +46,13 @@ std::string ERR_ERRONEUSNICKNAME();
 std::string ERR_PASSWDMISMATCH(std::string nick);
 std::string ERR_CHANNELISFULL(std::string nick);
 std::string ERR_UNKNOWNMODE();
-std::string ERR_INVITEONLYCHAN(std::string channel);
+std::string ERR_INVITEONLYCHAN(std::string nick, std::string channel);
 std::string ERR_BANNEDFROMCHAN(std::string nick);
-std::string ERR_BADCHANNELKEY(std::string nick);
-std::string ERR_INVITEONLYCHAN();
+std::string ERR_BADCHANNELKEY(std::string nick, std::string channel);
 std::string ERR_NOPRIVILEGES(std::string nick);
 std::string ERR_CHANOPRIVSNEEDED(std::string nick, std::string channel);
-std::string ERR_UMODEUNKNOWNFLAG();
+std::string ERR_UMODEUNKNOWNFLAG(std::string nick, std::string flag);
+std::string RPL_CHANNELMODEIS(std::string nick, std::string channel);
 std::string ERR_USERSDONTMATCH();
 
 

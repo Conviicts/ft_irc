@@ -12,30 +12,33 @@ int		IrcServer::JOIN(User &u, Message msg) {
 	
 	if (msg.args().size() < 1)
 		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-	for (std::vector<std::string>::const_iterator it = msg.args().begin(); it != msg.args().end(); ++it) {
-		if (it->at(0) != '#') {
-			u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), *it));
-			continue ;
-		}
-		Channel *c = _network.getChannel(*it);
-		bool newChan = 0;
-		if (!c) {
-			c = new Channel(*it, "", &u);
-			_network.add(c);
-			newChan = 1;
-		} else if (c->getUser(&u)) {
-			continue ;
-		} else {
-			bool isInvited = c->isInvited(u);
-
-			if (!isInvited && c->isInviteOnly()) {
-				u.reply(u, ERR_INVITEONLYCHAN(c->name()));
-				continue ;
-			}
-			//TODO: check password
-		}
-		c->addUser(&u, newChan == 1 ? UserMode(UserMode::CREATOR) : UserMode(UserMode::USER));
-		u.joinChannel(u, c);
+	
+	if (msg.args()[0][0] != '#') {
+		u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
+		return 0;
 	}
+	Channel *c = _network.getChannel(msg.args()[0]);
+	bool newChan = 0;
+	if (!c) {
+		c = new Channel(msg.args()[0], (!msg.args()[1].empty()) ? msg.args()[1] : "", &u);
+		_network.add(c);
+		newChan = 1;
+		std::cout << "New channel created: " << msg.args()[0] << std::endl;
+	} else if (c->getUser(&u)) {
+		return 0;
+	} else {
+		bool isInvited = c->isInvited(u);
+
+		if (!isInvited && c->isInviteOnly()) {
+			return u.reply(u, ERR_INVITEONLYCHAN(u.nickname(), c->name()));
+		}
+		std::cout << c->password() << std::endl;
+		if (!c->password().empty()) {
+			if (msg.args().size() < 2 || msg.args()[1].empty() || c->password() != msg.args()[1])
+				return u.reply(u, ERR_BADCHANNELKEY(u.nickname(), c->name()));
+		}
+	}
+	c->addUser(&u, newChan == 1 ? UserMode(UserMode::CREATOR) : UserMode(UserMode::USER));
+	u.joinChannel(u, c);
 	return (1);
 }
