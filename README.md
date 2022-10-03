@@ -29,24 +29,27 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 
 ### Commandes
 
-- [x] NICK
-- [x] PASS
-- [x] USER
-- [x] QUIT
-- [X] JOIN
-- [ ] OPER
-- [ ] PRIVMSG
-- [ ] NOTICE
-- [ ] TOPIC
-- [ ] KILL
-- [ ] INVITE
-- [ ] KICK
-- [ ] LIST
-- [X] NAMES
-- [ ] PART
-- [X] PING
-- [ ] MODE
-- [ ] WHO
+|      | commande | arguements | description |
+| :--- | :------- | :--------- | :---------- |
+| [X]  | NICK     | `<pseudonyme>` | donner un pseudonyme à un utilisateur, ou pour changer le pseudonyme précédent |
+| [X]  | PASS     | `<mot de passe>` | définir le mot de passe de connexion |
+| [x]  | USER     | `<nom d'utilisateur>` `<hôte>` `<nom de serveur>` `<nom réel>` | spécifier le nom d'utilisateur, le nom d'hôte, le nom de serveur, et le véritable nom d'un nouvel utilisateur |
+| [X]  | QUIT     | `[<Message de départ>]` (optionnel) | quitter le serveur, le message par defaut est le pseudonyme |
+| [X]  | JOIN     | `<chanel>{,<chanel>}` `[<clé>{,<clé>}]` | rejoindre un chanel, avec un mot de passe ou non |
+| [ ]  | OPER     | `<utilisateur>` `<mot de passe>` | utilisé par un utilisateur normal pour obtenir le privilège d'opérateur. |
+| [X]  | PRIVMSG  | ` <destinataire>{,<destinataire>}` ` <texte à envoyer >` |  envoyer un message privé entre des utilisateurs. |
+| [ ]  | NOTICE   | `<pseudonyme>` `<texte>` | idem que PRIVMSG mais different |
+| [ ]  | TOPIC    | `<chanel>` `[<sujet>]` | modifier ou voir le sujet d'un chanel |
+| [ ]  | KILL     | `<pseudonyme>` `<commentaire>`| provoquer la fermeture de la connexion client/serveur par le serveur qui gère cette connexion. |
+| [ ]  | INVITE   | `<pseudonyme>` `<canal>` | inviter des utilisateurs dans un chanel |
+| [ ]  | KICK     | `<canal>` `<utilisateur>` `[<commentaire>]` | retirer par la force un utilisateur d'un canal (PART forcé). |
+| [ ]  | LIST     | `[<chanel>{,<chanel>}]` `[<serveur>]` | lister les chanels et leur sujet. Si un chanel est precise seul le statut de ces chanels est affiché. |
+| [X]  | NAMES    | `[<chanel>{,<chanel>}]` | obtenir la liste des pseudonymes visibles sur n'importe quel chanel qu'il peut voir, on peut preciser un ou plusieurs chanel |
+| [ ]  | PART     | `<chanel>{,< chanel >}` | partir d'un ou plusieurs chanel(s) |
+| [X]  | PING     | `<serveur1>` `[<serveur2>]` | tester la présence d'un client actif à l'autre bout de la connexion |
+| [ ]  | MODE     | `<chanel>` `{[+|-]|o|p|s|i|t|n|b|v}` `[<limite>]` `[<utilisateur>]` `[<masque de bannissement >]` | permet aussi bien de changer les modes des utilisateurs que ceux des chanels |
+| [ ]  | WHO      | `[<nom>]` `[<o>]`| renvoie une liste d'informations qui correspondent au paramètre `<nom>` donné par le client |
+
 
 ### Modes
 
