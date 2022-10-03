@@ -2,7 +2,12 @@
 
 // Commande: INVITE
 // Paramètres: <pseudonyme> <canal>
-// Le message INVITE est utilisé pour inviter des utilisateurs dans un canal. Le paramètre <pseudonyme> est le pseudonyme de la personne à inviter dans le canal destination <canal>. Il n'est pas nécessaire que le canal dans lequel la personne est invitée existe, ni même soit valide. Pour inviter une personne dans un canal en mode sur invitation (MODE +i), le client envoyant l'invitation doit être opérateur sur le canal désigné.
+// Le message INVITE est utilisé pour inviter des utilisateurs dans un canal.
+// Le paramètre <pseudonyme> est le pseudonyme de la personne à inviter dans le 
+// canal destination <canal>. Il n'est pas nécessaire que le canal dans lequel 
+// la personne est invitée existe, ni même soit valide.
+// Pour inviter une personne dans un canal en mode sur invitation (MODE +i),
+// le client envoyant l'invitation doit être opérateur sur le canal désigné.
 
 // Réponses numériques :
 //            ERR_NEEDMOREPARAMS              ERR_NOSUCHNICK
@@ -27,11 +32,12 @@ int		IrcServer::INVITE(User &u, Message msg) {
 	if (!channel)
 		return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[1]));
 
-	if (channel->getUser(&u)) {
+	UserMode *um = channel->getUser(&u);
+	if (um) { // user on channel
 
-		// if (channel->isChanOp(&u)) {
+		if (um->isChanOP()) {
 	
-			if (channel->getUser(target) == false) {
+			if (channel->getUser(target) == NULL) {
 
 				channel->invite(target);
 				target->reply(*target, RPL_INVITING(u.getPrefix(), target->nickname(), channel->name())); // use reply ou write ?
@@ -39,9 +45,9 @@ int		IrcServer::INVITE(User &u, Message msg) {
 			}
 			else
 				u.reply(u, ERR_USERONCHANNEL(target->nickname(), channel->name()));
-		// }
-		// else
-		// 	u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), channel->name()));
+		}
+		else
+			u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), channel->name()));
 	}
 	else
 		u.reply(u, ERR_NOTONCHANNEL(u.nickname(), channel->name()));
