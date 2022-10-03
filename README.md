@@ -43,7 +43,7 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 | [ ]  | KILL     | `<pseudonyme>` `<commentaire>`| provoquer la fermeture de la connexion client/serveur par le serveur qui gère cette connexion. |
 | [ ]  | INVITE   | `<pseudonyme>` `<canal>` | inviter des utilisateurs dans un chanel |
 | [X]  | KICK     | `<canal>` `<utilisateur>` `[<commentaire>]` | retirer par la force un utilisateur d'un canal (PART forcé). |
-| [ ]  | LIST     | `[<chanel>{,<chanel>}]` `[<serveur>]` | lister les chanels et leur sujet. Si un chanel est precise seul le statut de ces chanels est affiché. |
+| [X]  | LIST     | `[<chanel>{,<chanel>}]` `[<serveur>]` | lister les chanels et leur sujet. Si un chanel est precise seul le statut de ces chanels est affiché. |
 | [X]  | NAMES    | `[<chanel>{,<chanel>}]` | obtenir la liste des pseudonymes visibles sur n'importe quel chanel qu'il peut voir, on peut preciser un ou plusieurs chanel |
 | [ ]  | PART     | `<chanel>{,< chanel >}` | partir d'un ou plusieurs chanel(s) |
 | [X]  | PING     | `<serveur1>` `[<serveur2>]` | tester la présence d'un client actif à l'autre bout de la connexion |
