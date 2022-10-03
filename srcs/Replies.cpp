@@ -16,8 +16,8 @@ std::string RPL_JOIN(std::string source, std::string channel) {
 	return ":" + source + " JOIN :" + channel;
 }
 
-std::string RPL_PART(std::string source, std::string channel) {
-	return ":" + source + " PART :" + channel;
+std::string RPL_PART(std::string source, std::string channel, std::string reason) {
+	return (":" + source + " PART " + channel + " :" + reason);
 }
 
 std::string RPL_WELCOME(std::string nick) {
