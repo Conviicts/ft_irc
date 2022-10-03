@@ -74,6 +74,15 @@ UserMode 					*Channel::getUser(User *user) {
 	return (it != _users.end() ? &it->second : NULL);
 }
 
+UserMode 					*Channel::getUserByNickname(std::string nickname) {
+	for (std::map<User *, UserMode>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		if (it->first->nickname() == nickname)
+			return &it->second;
+	}
+	return NULL;
+}
+
+
 void						Channel::setInviteOnly(bool mode) { _invite_only = mode; }
 
 void						Channel::invite(User *user) { _invited.insert(user->nickname()); }

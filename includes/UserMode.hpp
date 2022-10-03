@@ -4,7 +4,7 @@ class UserMode {
     public:
         enum Flag {
             CREATOR,
-            OPERATOR,
+            OPERATOR, // chanop
             USER
         };
 
@@ -13,6 +13,7 @@ class UserMode {
         ~UserMode();
 
         bool isChanOP() const;
+        void setChanOP(bool op);
     private:
         Flag        _mode;
 };

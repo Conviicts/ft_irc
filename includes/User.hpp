@@ -3,14 +3,14 @@
 
 #include "BasicConnection.hpp"
 #include "Channel.hpp"
-#include "ERR_RPL.hpp"
+#include "Replies.hpp"
 
 class Channel;
 
 class User : public TCP::BasicConnection {
 	public:
 
-		enum Status {			// State // c'est pour toi john si tu veux utiliser ca si non tu peux delete 
+		enum Status {		// State c'est pour toi john si tu veux utiliser ca si non tu peux delete 
 			UNREGISTER,
 			UNREGISTER_PASS, // ?
 			REGISTER,
@@ -32,13 +32,11 @@ class User : public TCP::BasicConnection {
 		int						channelsCount();
 		void					setChannelsCount(const int count);
 
-		int						state() const;
-		void					setState(int state);
+		int						state() const;//XX on garde ?
+		void					setState(int state);//XX on garde ?
 
-		bool					isRegistered() const;
-
-		bool					isOperator() const;
-		void					setOperator(bool value);
+		bool					isOperator() const; //XX on garde ?
+		void					setOperator(bool value);//XX on garde ?
 
 		std::string				getPrefix() const;
 
@@ -52,8 +50,7 @@ class User : public TCP::BasicConnection {
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;
-		bool					_registered;
-		bool					_mode; // operator or not
+		bool					_operator; //XX operator or not
 		int						_state;
 		int						_channelsCount;
 

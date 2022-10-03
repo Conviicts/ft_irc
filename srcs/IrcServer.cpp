@@ -1,6 +1,6 @@
 #include "IrcServer.hpp"
 #include "Channel.hpp"
-#include "ERR_RPL.hpp"
+#include "Replies.hpp"
 
 IrcServer::IrcServer(char **av) : 
     _port(av[1]),

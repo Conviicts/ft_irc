@@ -24,6 +24,7 @@ class Channel {
 		void						addUser(User *user, const UserMode &mode);
 		void						delUser(User *user);
 		UserMode 					*getUser(User *user);
+		UserMode 					*getUserByNickname(std::string nickname);
 
 		int							maxUsers() const;
 		void						setMaxUsers(int maxUsers);
@@ -40,7 +41,6 @@ class Channel {
 		void						setInviteOnly(bool mode);
 		void						invite(User *user);
 
-		bool						isChanOp(User const *user) const;
 		bool						isInvited(User const & user) const;
 		bool						isInviteOnly() const;
 

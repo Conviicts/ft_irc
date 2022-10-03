@@ -3,9 +3,7 @@
 
 User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
-	// _channel(NULL),
-	_registered(false),
-	_mode(false),
+	_operator(false),
 	_state(0),
 	_idle(time(NULL))
 {}
@@ -25,10 +23,8 @@ void 					User::setRealname(const std::string &realname) { _realname = realname;
 int						User::channelsCount() { return (_channelsCount); }
 void					User::setChannelsCount(const int count) { _channelsCount = count; }
 
-bool					User::isRegistered() const { return (_registered); }
-
-bool					User::isOperator() const { return (_mode); }
-void					User::setOperator(bool value) { _mode = value; }
+bool					User::isOperator() const { return (_operator); }
+void					User::setOperator(bool value) { _operator = value; }
 
 std::string 			User::getPrefix() const {
 	return _nickname + (_username.empty() ? "" : "!" + _username) + (socket()->host().empty() ? "" : "@" + socket()->host());
