@@ -20,7 +20,7 @@ int		IrcServer::JOIN(User &u, Message msg) {
 	Channel *c = _network.getChannel(msg.args()[0]);
 	bool newChan = 0;
 	if (!c) {
-		c = new Channel(msg.args()[0], (!msg.args()[1].empty()) ? msg.args()[1] : "", &u);
+		c = new Channel(msg.args()[0], (msg.args().size() > 1 && !msg.args()[1].empty()) ? msg.args()[1] : "", &u);
 		_network.add(c);
 		newChan = 1;
 		std::cout << "New channel created: " << msg.args()[0] << std::endl;
@@ -32,7 +32,6 @@ int		IrcServer::JOIN(User &u, Message msg) {
 		if (!isInvited && c->isInviteOnly()) {
 			return u.reply(u, ERR_INVITEONLYCHAN(u.nickname(), c->name()));
 		}
-		std::cout << c->password() << std::endl;
 		if (!c->password().empty()) {
 			if (msg.args().size() < 2 || msg.args()[1].empty() || c->password() != msg.args()[1])
 				return u.reply(u, ERR_BADCHANNELKEY(u.nickname(), c->name()));
