@@ -15,22 +15,28 @@
 // PART #twilight_zone ; quitte le canal "#twilight_zone"
 // PART #oz-ops,&group5 ; quitte les canaux "&group5" et "#oz-ops".
 
+std::vector<std::string>    split(const std::string &str, char delim);
 
 int		IrcServer::PART(User &u, Message msg) {
 	if (u.state() != 2)
 		return (u.reply(u, ERR_NOTREGISTERED(u.nickname())));
 	if (msg.args().size() < 1)
 		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-	for (std::vector<std::string>::const_iterator it = msg.args().begin(); it != msg.args().end(); it++) {
+	std::vector<std::string> channels = split(msg.args()[0], ',');
+	for (std::vector<std::string>::const_iterator it = channels.begin(); it != channels.end(); it++) {
 		Channel *channel = _network.getChannel(*it);
-		if (!channel)
-			return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), *it));
-		if (channel->getUser(&u) == NULL)
-			return u.reply(u, ERR_NOTONCHANNEL(u.nickname(), *it));
-		channel->broadcast(&u, RPL_PART(u.nickname(), channel->name()));
+		if (!channel) {
+			u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), *it));
+			continue ;
+		}
+		if (channel->getUser(&u) == NULL) {
+			u.reply(u, ERR_NOTONCHANNEL(u.nickname(), *it));
+			continue ;
+		}
+		channel->broadcast(&u, RPL_PART(u.nickname(), channel->name(), "Leaving"));
 		channel->delUser(&u);
-		// if (!channel->)
-		// 	_network.remove(channel);
+		if (channel->usersNick().empty())
+			_network.remove(channel);
 	}
 	return (1);
 }
