@@ -26,7 +26,13 @@ class User : public TCP::BasicConnection {
 		const std::string		&username() const;
 		void					setUsername(const std::string &username);
 
-		const std::string		&realname() const;
+		const std::string		&hostname() const;
+		void					setHostname(const std::string &hostname);
+
+		const std::string		&serverName() const;
+		void					setServerName(const std::string &serverName);
+
+		const std::string		realname() const;
 		void					setRealname(const std::string &realname);
 
 		int						channelsCount();
@@ -50,6 +56,8 @@ class User : public TCP::BasicConnection {
 		std::string				_nickname;
 		std::string				_username;
 		std::string				_realname;
+		std::string				_hostName;
+		std::string				_serverName;
 		bool					_operator; //XX operator or not
 		int						_state;
 		int						_channelsCount;

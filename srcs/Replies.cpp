@@ -36,8 +36,12 @@ std::string RPL_MYINFO() {
 	return "004 ";
 }
 
-std::string RPL_UMODEIS() {
-	return "221 ";
+std::string RPL_UMODEIS(std::string nick, std::string mode) {
+	return "221 " + nick + " :" + mode;
+}
+
+std::string RPL_ENDOFWHO(std::string nick) {
+	return "315 " + nick + " :End of /WHO list.";
 }
 
 std::string RPL_LISTSTART(std::string nick) {
@@ -68,6 +72,10 @@ std::string	RPL_INVITING(std::string nick, std::string target, std::string chann
 	return "341 " + nick + ": " + target + ": " + channel;
 }
 
+std::string RPL_WHOREPLY(std::string nick, std::string channel, std::string user, std::string host, std::string server, std::string nick2, std::string flags, std::string hopcount, std::string realname) {
+	return "352 " + nick + " " + channel + " " + user + " " + host + " " + server + " " + nick2 + " " + flags + " :" + hopcount + " " + realname;
+}
+
 std::string RPL_NAMREPLY(std::string source, std::string channel, std::string users) {
 	return "353 " + source + " = " + channel + " :" + users;
 }
@@ -85,7 +93,10 @@ std::string RPL_ENDOFMOTD() {
 }
 
 std::string RPL_YOUROPER(std::string nick, std::string arg1, std::string arg2) {
-	return "381 " + nick + ":Attempt to register as an operator using a username of '" + arg1 + "' and '" + arg2 + "' as the password.";
+	(void)arg1;
+	(void)arg2;
+	return "381 " + nick + " :You are now an IRC operator";
+	// return "381 " + nick + ":Attempt to register as an operator using a username of '" + arg1 + "' and '" + arg2 + "' as the password.";
 }
 
 std::string RPL_NOTONCHANNEL() {
@@ -166,8 +177,8 @@ std::string ERR_PASSWDMISMATCH(std::string nick) {
 	return "464 " + (nick.empty() ?  "*" : nick) + " :Password incorrect";
 }
 
-std::string ERR_CHANNELISFULL(std::string nick) {
-	return "471 " + nick + ":Cannot join channel (+l)";
+std::string ERR_CHANNELISFULL(std::string nick, std::string channel) {
+	return "471 " + nick + ": " + channel + " :Cannot join channel (+l)";
 }
 
 std::string ERR_UNKNOWNMODE() {
@@ -198,6 +209,6 @@ std::string ERR_UMODEUNKNOWNFLAG(std::string nick, std::string flag) {
 	return "501 " + nick + " :" + flag + " Unkown MODE flag";;
 }
 
-std::string ERR_USERSDONTMATCH() {
-	return "502 ";
+std::string ERR_USERSDONTMATCH(std::string nick) {
+	return "502 " + nick + " :Cannot change mode for other users";
 }

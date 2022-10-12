@@ -2,6 +2,7 @@
 #include <algorithm>
 
 Channel::Channel(const std::string &name, const std::string &password, User *admin) :
+	_maxUsers(99),
 	_type(name.c_str()[0] == '#' ? 0 : 1),
 	_invite_only(false),
 	_admin(admin),
@@ -36,7 +37,6 @@ void						Channel::delUser(User *user) {
 }
 
 int							Channel::maxUsers() const { return _maxUsers; }
-
 void						Channel::setMaxUsers(int maxUsers) { _maxUsers = maxUsers; }
 
 const std::string			&Channel::getTopic() const { return _topic; }
@@ -47,6 +47,13 @@ void						Channel::broadcast(User *user, const std::string &msg) {
 		User *u(it->first);
 		if (u->nickname() == user->nickname())
 			continue;
+		u->write(msg);
+	}
+}
+
+void						Channel::broadcast2(const std::string &msg) {
+	for (std::map<User *, UserMode>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		User *u(it->first);
 		u->write(msg);
 	}
 }
@@ -63,8 +70,10 @@ std::vector<std::string>	Channel::usersNick() {
 	std::vector<std::string> nicks;
 
 	for (std::map<User *, UserMode>::const_iterator it = _users.begin(); it != _users.end(); it++) {
-		User *user = it->first;
-		nicks.push_back((_admin == user ? "@" : "") + it->first->nickname());
+		if ((*it).second.isChanOP())
+			nicks.push_back("@" + it->first->nickname());
+		else
+			nicks.push_back(it->first->nickname());
 	}
 	return nicks;
 }
@@ -92,3 +101,7 @@ bool						Channel::isInvited(User const &user) const {
 }
 
 bool						Channel::isInviteOnly() const { return _invite_only; }
+
+std::map<User *, UserMode>	Channel::users() const {
+	return _users.empty() ? std::map<User *, UserMode>() : _users;
+}

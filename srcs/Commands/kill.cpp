@@ -19,9 +19,8 @@
 
 
 int		IrcServer::KILL(User &u, Message msg) {
-
-	if (msg.args().size() < 1)
-		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
+	if (msg.args().size() < 2)
+		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.command()));
 
 	User *target = _network.getByNickname(msg.args()[0]);
 	if (!target)
@@ -37,8 +36,6 @@ int		IrcServer::KILL(User &u, Message msg) {
 		message.append(*it + " ");
 	message = message.at(0) == ':' ? message.substr(1) : message;
 	/* -------------------------------------------------------------------------------------------------- */
-
 	disconnect(*target, message, true);
-
 	return (1);
 }

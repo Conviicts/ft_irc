@@ -23,12 +23,16 @@ int		IrcServer::JOIN(User &u, Message msg) {
 		c = new Channel(msg.args()[0], (msg.args().size() > 1 && !msg.args()[1].empty()) ? msg.args()[1] : "", &u);
 		_network.add(c);
 		newChan = 1;
-		std::cout << "New channel created: " << msg.args()[0] << std::endl;
+		// std::cout << "New channel created: " << msg.args()[0] << std::endl;
 	} else if (c->getUser(&u)) {
 		return 0;
 	} else {
 		bool isInvited = c->isInvited(u);
 
+		if ((int)(c->_users.size() + 1) > (int)c->maxUsers()) {
+			u.reply(u, ERR_CHANNELISFULL(u.nickname(), c->name()));
+			return 0;
+		}
 		if (!isInvited && c->isInviteOnly()) {
 			return u.reply(u, ERR_INVITEONLYCHAN(u.nickname(), c->name()));
 		}

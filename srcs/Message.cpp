@@ -28,7 +28,8 @@ Message::Message(const std::string &message) {
     for (size_t i = 1; i < args.size(); i++) {
         eraseChar(args[i], "\r");
         eraseChar(args[i], "\n");
-        _args.push_back(args[i]);
+        if (!args[i].empty() && args[i] != ":")
+            _args.push_back(args[i]);
     }
 }
 

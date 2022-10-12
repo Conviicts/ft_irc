@@ -15,7 +15,7 @@
 // PART #twilight_zone ; quitte le canal "#twilight_zone"
 // PART #oz-ops,&group5 ; quitte les canaux "&group5" et "#oz-ops".
 
-std::vector<std::string>    split(const std::string &str, char delim);
+std::vector<std::string>	split(const std::string &str, char delim);
 
 int		IrcServer::PART(User &u, Message msg) {
 	if (u.state() != 2)

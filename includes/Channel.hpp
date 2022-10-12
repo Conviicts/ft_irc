@@ -28,11 +28,13 @@ class Channel {
 
 		int							maxUsers() const;
 		void						setMaxUsers(int maxUsers);
+		
 
 		const std::string			&getTopic() const;
 		void						setTopic(std::string const & topic);
 
 		void						broadcast(User *user, const std::string &msg);
+		void						broadcast2(const std::string &msg);
 		void						kick(User *user, User *target, const std::string &reason);
 
 		int							clientSize() const;
@@ -44,6 +46,9 @@ class Channel {
 		bool						isInvited(User const & user) const;
 		bool						isInviteOnly() const;
 
+		std::map<User *, UserMode>	users() const;
+
+		std::map<User *, UserMode>	_users;
 	private:
 		Channel(const Channel &);
 		Channel &operator=(const Channel &);
@@ -55,6 +60,5 @@ class Channel {
 		std::string					_name;
 		std::string					_password;
 		std::string					_topic;
-		std::map<User *, UserMode>	_users;
 		std::set<std::string>		_invited;
 };

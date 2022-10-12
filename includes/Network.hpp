@@ -33,6 +33,7 @@ class Network {
 
         const Connection  	    &connections() const;
 	    const Users  		    &users() const;
+	    const Channels		    &channels() const;
 
         void                    newZombie(TCP::BasicConnection *z);
         TCP::BasicConnection    *nextZombie();

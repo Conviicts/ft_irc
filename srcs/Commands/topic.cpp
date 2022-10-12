@@ -18,56 +18,34 @@
 //    TOPIC #test :another topic		;set the topic on #test to "another topic".
 //    TOPIC #test						; check the topic for #test.
 
-void	handleTopic(User &u, Message msg, Network &network) {
-	(void)u;
-	(void)msg;
-	(void)network;
-	// Channel *channel = network.getChannel(msg.args()[0]);
-
-	// // std::cout << "Size: " << msg.args().size() << std::endl;
-	// if (msg.args().size() > 1) {
-	// 	if (channel->isOnChannel(&u)) { //si le user est dans le channel
-	// 		if(channel->isOperator(&u)) { //si le user est operator
-
-	// 			/* CHECK fonction message --------------------------------------------------------------------------- */
-	// 			std::string message;
-
-	// 			for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
-	// 			message.append(*it + " ");
-	// 			message = message.at(0) == ':' ? message.substr(1) : message;
-	// 			/* -------------------------------------------------------------------------------------------------- */
-	// 			channel->setTopic(message);
-	// 			channel->broadcast(": " + u.getPrefix() + " TOPIC " + channel->name() + " :" + message);
-	// 		}
-	// 		else
-	// 			u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), channel->name()));
-	// 	}
-	// 	else
-	// 		u.reply(u, ERR_NOTONCHANNEL(u.nickname(), channel->name()));
-	// }
-
-	// if (msg.args().size() == 1) { // on verifie sil y a un topic
-	// 	if(channel->getTopic().size()) //il y a un topic
-	// 		u.reply(u, RPL_TOPIC(u.nickname(), channel->name(), channel->getTopic()));
-	// 	else
-	// 		u.reply(u, RPL_NOTOPIC(u.nickname(), channel->name()));
-	// }
-}
-
 int		IrcServer::TOPIC(User &u, Message msg) {
 
 	if (msg.args().size() < 1)
-		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
+		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.command()));
 
-	try {
-		handleTopic(u, msg, _network);
-	}
-	catch(IrcServer::ChannelNotFoundException & e) {
-		u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
-	}
-	catch(IrcServer::UserNotFoundException & e) {
-		u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[1]));
-	}
+	Channel *channel = _network.getChannel(msg.args()[0]);
+	if (!channel)
+		return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
 
+	UserMode *user = channel->getUser(&u);
+	if (!user)
+		return u.reply(u, ERR_NOTONCHANNEL(u.nickname(), msg.args()[0]));
+	if (!user->isChanOP())
+		return u.reply(u, ERR_CHANOPRIVSNEEDED(u.nickname(), msg.args()[0]));
+	if (msg.args().size() > 1) { 
+		std::string message;
+		for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
+			message.append(*it + " ");
+		message = message.at(0) == ':' ? message.substr(1) : message;
+		channel->setTopic(message);
+		channel->broadcast2(":" + u.getPrefix() + " TOPIC " + msg.args()[0] + " :" + message);
+		
+		std::cout << channel->getTopic() << std::endl;
+	} else if (msg.args().size() == 1) {
+		if (channel->getTopic().empty())
+			return u.reply(u, RPL_NOTOPIC(u.nickname(), msg.args()[0]));
+		else
+			return u.reply(u, RPL_TOPIC(u.nickname(), msg.args()[0], channel->getTopic()));
+	}
 	return (1);
 }

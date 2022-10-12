@@ -3,6 +3,7 @@
 
 User::User(TCP::TCPSocket *socket) :
 	BasicConnection(socket),
+	_realname(""),
 	_operator(false),
 	_state(0),
 	_idle(time(NULL))
@@ -17,7 +18,13 @@ void 					User::setNickname(const std::string &nickname) { _nickname = nickname;
 const std::string		&User::username() const { return (_username); }
 void 					User::setUsername(const std::string &username) { _username = username; }
 
-const std::string		&User::realname() const { return (_realname); }
+const std::string		&User::hostname() const { return (_hostName); }
+void					User::setHostname(const std::string &hostname) { _hostName = hostname; }
+
+const std::string		&User::serverName() const { return (_serverName); }
+void					User::setServerName(const std::string &serverName) { _serverName = serverName; }
+
+const std::string		User::realname() const { return _realname; }
 void 					User::setRealname(const std::string &realname) { _realname = realname; }
 
 int						User::channelsCount() { return (_channelsCount); }

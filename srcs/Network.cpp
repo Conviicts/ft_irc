@@ -53,6 +53,10 @@ const Network::Users		&Network::users() const {
 	return _users;
 }
 
+const Network::Channels		&Network::channels() const {
+	return _channels;
+}
+
 void						Network::newZombie(TCP::BasicConnection *z) {
 	_zombies.push_back(z);
 }
