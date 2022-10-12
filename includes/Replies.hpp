@@ -7,7 +7,7 @@
 std::string RPL_NOTICE(std::string source, std::string target, std::string message);
 std::string RPL_PONG(std::string source, std::string message);
 std::string RPL_JOIN(std::string source, std::string channel);
-std::string RPL_PART(std::string source, std::string channel, std::string reason);
+std::string RPL_PART(std::string source, std::string channel);
 std::string RPL_WELCOME(std::string nick);
 std::string RPL_YOURHOST(std::string nick, std::string servername, std::string version);
 std::string RPL_CREATED(std::string nick, std::string date);

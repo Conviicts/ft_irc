@@ -6,6 +6,7 @@ User::User(TCP::TCPSocket *socket) :
 	_realname(""),
 	_operator(false),
 	_state(0),
+	_channelsCount(0),
 	_idle(time(NULL))
 {}
 

@@ -33,9 +33,9 @@ int		IrcServer::PART(User &u, Message msg) {
 			u.reply(u, ERR_NOTONCHANNEL(u.nickname(), *it));
 			continue ;
 		}
-		channel->broadcast(&u, RPL_PART(u.nickname(), channel->name(), "Leaving"));
+		channel->broadcast(&u, RPL_PART(u.nickname(), channel->name()));
 		channel->delUser(&u);
-		if (channel->usersNick().empty())
+		if (channel->clientSize() == 0)
 			_network.remove(channel);
 	}
 	return (1);

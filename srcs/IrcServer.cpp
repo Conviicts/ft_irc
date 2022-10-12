@@ -27,6 +27,7 @@ IrcServer::IrcServer(char **av) :
     _userCommands["NOTICE"] = &IrcServer::NOTICE;
     _userCommands["WHO"] = &IrcServer::WHO;
     _userCommands["KILL"] = &IrcServer::KILL;
+    _userCommands["kill"] = &IrcServer::KILL;
     _userCommands["PING"] = &IrcServer::PING;
 }
 
@@ -79,7 +80,6 @@ void                IrcServer::run() {
                     }
                     if (line.empty())
                         continue ;
-                    // std::cout << "Received: " << line << std::endl;
                     Message msg = Message(line);
                     execute(_network.getUserBySocket(socket), msg);
                 }
@@ -96,8 +96,7 @@ void                IrcServer::execute(TCP::BasicConnection *c, Message message)
 	User &user = *static_cast<User*>(c);
 	userCommands::const_iterator i = _userCommands.find(message.command());
 	if (i == _userCommands.end()) {
-		std::cout << "UNKNOWN COMMAND: [" << message.command() << "]" << std::endl;
-		std::cout << ">\targs size: [" << message.args().size() << "]" << std::endl;
+		std::cout << "UNKNOWN COMMAND: [" << message.command() << "] args size: [" << message.args().size() << "]" << std::endl;
         return ;
     }
 	(this->*(i->second))(user, message);
@@ -122,13 +121,27 @@ void                IrcServer::disconnect(TCP::TCPSocket *socket, const std::str
 }
 
 void                IrcServer::disconnect(User &user, const std::string &reason, bool notifyUser) throw() {
-    (void)notifyUser;
+    if (user.channelsCount()) {
+        const Network::Channels &channels = _network.channels();
+        Network::Channels::const_iterator it = _network.channels().begin();
+        while (it != channels.end()) {
+            Channel *channel = it->second;
+            it++;
+            if (channel->getUser(&user)) {
+                channel->delUser(&user);
+                if (channel->clientSize() == 0) {
+                    _network.remove(channel);
+                } else {
+                    channel->broadcast2("QUIT " + channel->name() + " " + user.username() + " " + reason);
+                }
+            }
+        }
+    }
     std::cout << "Disconnected: " << user.socket()->ip() << " fd: " << user.socket()->fd();
     if (notifyUser) {
         std::cout << "\n\tReason: " << reason;
         std::string quit_reason;
-        quit_reason =  "(Client Quit) ";
-        quit_reason += reason;
+        quit_reason =  reason.empty() ? "(Client Quit) ": reason;
         user.write(quit_reason);
     }
     std::cout << std::endl;
