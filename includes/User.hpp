@@ -50,7 +50,7 @@ class User : public TCP::BasicConnection {
 		int						reply(User &u, std::string const &reponse);
 		void					welcome(User &u);
 
-		void					joinChannel(User &u, Channel *channel);
+		void					joinChannel(User &u, Channel *channel, bool chanOp);
 
 	private:
 		std::string				_nickname;

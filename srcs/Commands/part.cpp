@@ -33,7 +33,8 @@ int		IrcServer::PART(User &u, Message msg) {
 			u.reply(u, ERR_NOTONCHANNEL(u.nickname(), *it));
 			continue ;
 		}
-		channel->broadcast(&u, RPL_PART(u.nickname(), channel->name()));
+		std::cout << ":" + u.getPrefix() + " PART " + channel->name() + " :Leaving" << std::endl;
+		channel->broadcast2(":" + u.getPrefix() + " PART " + channel->name() + " :Leaving");
 		channel->delUser(&u);
 		if (channel->clientSize() == 0)
 			_network.remove(channel);

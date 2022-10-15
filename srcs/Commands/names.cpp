@@ -35,25 +35,24 @@ int		IrcServer::NAMES(User &u, Message msg) {
 	if (u.state() != 2)
 		return (u.reply(u, ERR_NOTREGISTERED(u.nickname())));
 	if (msg.args().size() < 1)
-		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args()[0]));
-	// const Network::Channels &channels = _network.channels();
+		return u.reply(u, ERR_NEEDMOREPARAMS(u.nickname(), msg.args().size() > 0 ? msg.args()[0] : ""));
 	if (msg.args().size()) {
 		std::string users;
 		std::vector<std::string> targets = split(msg.args()[0], ',');
 		for (std::vector<std::string>::const_iterator it = targets.begin(); it != targets.end(); it++) {
 			Channel *channel = _network.getChannel(*it);
-			
 			if (channel && channel->getUser(&u)) {
 				for (std::map<User *, UserMode>::const_iterator it = channel->_users.begin(); it != channel->_users.end(); it++) {
 					if ((*it).second.isChanOP())
 						users += "@" + (*it).first->nickname() + " ";
 					else
-						users += (*it).first->nickname() + " ";
+						users += "+" + (*it).first->nickname() + " ";
 				}
-				u.reply(u, RPL_NAMREPLY(u.nickname(), channel->name(), users));
+				u.reply(u, RPL_NAMREPLY(u.getPrefix(), u.nickname(), channel->name(), users));
+
 			}
+			u.reply(u, RPL_ENDOFNAMES(u.getPrefix(), u.nickname(), channel->name()));
 		}
-		u.reply(u, RPL_ENDOFNAMES(u.nickname(), msg.args()[0]));
 	}
 	return (1);
 }

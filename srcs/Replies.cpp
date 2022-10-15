@@ -16,8 +16,8 @@ std::string RPL_JOIN(std::string source, std::string channel) {
 	return ":" + source + " JOIN :" + channel;
 }
 
-std::string RPL_PART(std::string source, std::string channel) {
-	return ":" + source + " PART " + channel;
+std::string RPL_PART(std::string source, std::string channel, std::string msg) {
+	return ":" + source + " PART " + channel + " :" + msg;
 }
 
 std::string RPL_WELCOME(std::string nick) {
@@ -56,8 +56,8 @@ std::string RPL_LISTEND(std::string nick) {
 	return "323 " + nick + " :End of /LIST";
 }
 
-std::string RPL_CHANNELMODEIS(std::string nick, std::string channel) {
-	return "324 " + nick + " " + channel + " +n";
+std::string RPL_CHANNELMODEIS(std::string nick, std::string channel, std::string mode, std::string modeparam) {
+	return "324 " + nick + " MODE " + channel + " " + mode + " " + modeparam;
 }
 
 std::string RPL_NOTOPIC(std::string nick, std::string channel) {
@@ -65,7 +65,7 @@ std::string RPL_NOTOPIC(std::string nick, std::string channel) {
 }
 
 std::string RPL_TOPIC(std::string nick, std::string channel, std::string topic) {
-	return "332 " + nick + ": " + channel + ": " + topic;
+	return "332 " + nick + " " + channel + " :" + topic;
 }
 
 std::string	RPL_INVITING(std::string nick, std::string target, std::string channel) {
@@ -76,13 +76,14 @@ std::string RPL_WHOREPLY(std::string nick, std::string channel, std::string user
 	return "352 " + nick + " " + channel + " " + user + " " + host + " " + server + " " + nick2 + " " + flags + " :" + hopcount + " " + realname;
 }
 
-std::string RPL_NAMREPLY(std::string source, std::string channel, std::string users) {
-	return "353 " + source + " = " + channel + " :" + users;
+std::string RPL_NAMREPLY(std::string prefix, std::string nick, std::string channel, std::string user) {
+	return ":" + prefix + " 353 " + nick + " = " + channel + " :" + user;
 }
 
-std::string RPL_ENDOFNAMES(std::string source, std::string channel) {
-	return "366 " + source + " " + channel + " :End of /NAMES list";
+std::string RPL_ENDOFNAMES(std::string prefix, std::string nick, std::string channel) {
+	return ":" + prefix + " 366 " + nick + " " + channel + " :End of /NAMES list";
 }
+
 
 std::string RPL_MOTDSTART() {
 	return "375 ";

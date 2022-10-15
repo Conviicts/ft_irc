@@ -1,8 +1,7 @@
 #include "IrcServer.hpp"
 
-// IL FAUT CHECK LE MODE SUR INVITATION DU CHANNEL
-// ET DANS CE CAS SEUL LES USER INVITED PEUVENT JOIN
-// BISOUS 😘
+// Si un JOIN a lieu avec succès, on envoie à l'utilisateur le sujet du canal (en utilisant RPL_TOPIC)
+// et la liste des utilisateurs du canal (en utilisant RPL_NAMREPLY), y compris lui-même.
 
 int		IrcServer::JOIN(User &u, Message msg) {
 	if (u.state() != 2)
@@ -23,8 +22,8 @@ int		IrcServer::JOIN(User &u, Message msg) {
 		c = new Channel(msg.args()[0], (msg.args().size() > 1 && !msg.args()[1].empty()) ? msg.args()[1] : "", &u);
 		_network.add(c);
 		newChan = 1;
-		// std::cout << "New channel created: " << msg.args()[0] << std::endl;
 	} else if (c->getUser(&u)) {
+		std::cout << "User already in channel" << std::endl;
 		return 0;
 	} else {
 		bool isInvited = c->isInvited(u);
@@ -41,7 +40,9 @@ int		IrcServer::JOIN(User &u, Message msg) {
 				return u.reply(u, ERR_BADCHANNELKEY(u.nickname(), c->name()));
 		}
 	}
+	// std::cout << "User " << u.nickname() << " joined channel " << c->name() << std::endl;
 	c->addUser(&u, newChan == 1 ? UserMode(UserMode::CREATOR) : UserMode(UserMode::USER));
-	u.joinChannel(u, c);
+	u.joinChannel(u, c, newChan);
+	
 	return (1);
 }

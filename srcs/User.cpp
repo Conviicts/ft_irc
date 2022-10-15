@@ -65,14 +65,18 @@ std::string				User::getResponse(User &u, std::string const &reponse) {
 	return reponse;
 }
 
-void					User::joinChannel(User &u, Channel *channel) {
+void					User::joinChannel(User &u, Channel *channel, bool chanOp) {
 	std::string users = "";
 	std::vector<std::string> usersList = channel->usersNick();
 	for (std::vector<std::string>::iterator it = usersList.begin(); it != usersList.end(); it++) {
-		users += *it + " ";
+		if (chanOp)
+			users += "@" + *it + " ";
+		else
+			users += "+" + *it + " ";
 	}
-	u.reply(u, RPL_NAMREPLY(u.nickname(), channel->name(), users));
-	u.reply(u, RPL_ENDOFNAMES(u.nickname(), channel->name()));
-
-	channel->broadcast(&u, ":" + u.nickname() + " JOIN :" + channel->name());
+	u.reply(u, RPL_NAMREPLY(u.getPrefix(), u.nickname(), channel->name(), users));
+	u.reply(u, RPL_ENDOFNAMES(u.getPrefix(), u.nickname(), channel->name()));
+	if (channel->getTopic().size())
+		u.reply(u, RPL_TOPIC(u.nickname(), channel->name(), channel->getTopic()));
+	channel->broadcast2(":" + u.getPrefix() + " JOIN :" + channel->name());
 }
