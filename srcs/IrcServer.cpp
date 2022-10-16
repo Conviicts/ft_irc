@@ -2,7 +2,7 @@
 #include "Channel.hpp"
 #include "Replies.hpp"
 
-IrcServer::IrcServer(char **av) : 
+IrcServer::IrcServer(char **av) :
     _port(av[1]),
     _password(av[2]),
     _state(STARTED),
@@ -14,8 +14,6 @@ IrcServer::IrcServer(char **av) :
 	_userCommands["QUIT"] = &IrcServer::QUIT;
 	_userCommands["PRIVMSG"] = &IrcServer::PRIVMSG;
 	_userCommands["JOIN"] = &IrcServer::JOIN;
-
-    //TODO: Commands
     _userCommands["OPER"] = &IrcServer::OPER;
     _userCommands["MODE"] = &IrcServer::MODE;
     _userCommands["PART"] = &IrcServer::PART;
@@ -96,11 +94,17 @@ void                IrcServer::execute(TCP::BasicConnection *c, Message message)
 	User &user = *static_cast<User*>(c);
 	userCommands::const_iterator i = _userCommands.find(message.command());
 	if (i == _userCommands.end()) {
-		std::cout << "UNKNOWN COMMAND: [" << message.command() << "] args size: [" << message.args().size() << "]" << std::endl;
+		std::cout << "UNKNOW COMMAND:\t" << message.command();
+        for (std::vector<std::string>::const_iterator it = message.args().begin(); it != message.args().end(); ++it)
+            std::cout << " " << *it;
+        std::cout << std::endl;
         return ;
     }
+    std::cout << "COMMAND:\t" << message.command();
+    for (std::vector<std::string>::const_iterator it = message.args().begin(); it != message.args().end(); ++it)
+        std::cout << " " << *it;
+    std::cout << std::endl;
 	(this->*(i->second))(user, message);
-    // std::cout << "status: " << status << std::endl;
 }
 
 void                IrcServer::flushZombies() {

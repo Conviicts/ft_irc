@@ -76,20 +76,17 @@
 char	parseARG1(std::string arg1) {
 
 	char	mask = 0;
-	// std::cout << "arg1: " << arg1 << std::endl;
+
 	if (arg1[0] == '-')
 		mask |= isMINUS;
 	for (size_t i = 1; i < arg1.size(); i++) {
 
 		if (arg1[i] == 'o')
 			mask |= isOPERATOR;
-
 		else if (arg1[i] == 'i')
 			mask |= isINVITED;
-
 		else if (arg1[i] == 'l')
 			mask |= isLIMIT;
-
 		else
 			return 0;
 	}
@@ -97,7 +94,6 @@ char	parseARG1(std::string arg1) {
 }
 
 int		parseLimit(std::string str) {
-
 	int limit = 0;
 
 	if (str.size() > 2)
@@ -111,173 +107,120 @@ int		parseLimit(std::string str) {
 }
 
 void	IrcServer::_channelMODE(User *u, Message msg, Channel *channel) {
-
-	std::string			mode;
 	char				mask = 0;
-
-	// if (msg.args().size() == 0)
-	// 	u->reply(*u, RPL_CHANNELMODEIS(u->nickname(), channel->name())); // ????
-		// u->reply(*u, ERR_NEEDMOREPARAMS(u->nickname(), msg.args()[0]));
-
-	// std::cout << "je suis dans _channelMODE" << std::endl;
-	// std::cout << "size: " << msg.args().size() << std::endl;
 
 	if (msg.args().size() < 2)
 		return ;
-
 	if (msg.args().size() > 1) {
-		// std::cout << "nombre d'argument > 1" << std::endl;
 		if ((mask = parseARG1(msg.args()[1])) == 0) {
 			u->reply(*u, ERR_UMODEUNKNOWNFLAG(u->nickname(), msg.args()[1]));
 			return ;
 		}
 	}
-
 	UserMode *t = NULL;
 	User *target = NULL;
-
 	int limit = -1;
+	std::string l = "";
 
 	if (msg.args().size() > 2) {
-
-		if ((limit = parseLimit(msg.args()[2])) < 0) {
-			// std::cout << "arg2 n'est pas une limite" << std::endl;
+		if ((limit = parseLimit(msg.args()[2])) > 0) {
+			l = msg.args()[2];
+		} else {
 			t = channel->getUserByNickname(msg.args()[2]); 
-			if (!t) {
-				// std::cout << "arg2 n'est pas un user" << std::endl;
+			if (!t)
 				return ;
-			}
-			// std::cout << "target" << std::endl;
 			target = _network.getByNickname(msg.args()[2]);
 		}
-
 	}
 
-	// std::cout << "limit: " << limit << std::endl;
-
 	if (msg.args().size() > 3) {
-
-		if (limit == -1) {
-			if ((limit = parseLimit(msg.args()[3])) < 0) {
-				// std::cout << "arg3 n'est pas une limite" << std::endl;
-				// return ;
-			}
+		if (limit == -1 && (limit = parseLimit(msg.args()[3])) > 0) {
+			l = msg.args()[3];
 		} else if (t == NULL) {
 			t = channel->getUserByNickname(msg.args()[3]);
-			if (!t) {
-				// std::cout << "arg3 n'est pas un user" << std::endl;
+			if (!t)
 				return ;
-			}
 			target = _network.getByNickname(msg.args()[3]);
 		} else {
-			// std::cout << "PUTE PUTE PUTE" << std::endl;
 			return;
 		}
 	}
-
 	UserMode *user = channel->getUser(u);
 	
 	if (user->isChanOP()) {
-		if (msg.args()[1].empty()) return ;
 
-		if (mask & isOPERATOR && user != t) {
+		if (msg.args()[1].empty())
+			return ;
+		if (t != NULL && mask & isOPERATOR && user != t) {
 			if (mask & isMINUS) {
-				// std::cout << "unset chanop" << std::endl;
 				t->setChanOP(false);
-			}
-			else {
-				// std::cout << "set chanop" << std::endl;
+				target->write(":" + u->nickname() + " MODE " + channel->name() + " -o " + target->nickname());
+					if (u != target)
+				u->write(":" + u->nickname() + " MODE " + channel->name() + " -o " + target->nickname());
+			} else { 
 				t->setChanOP(true);
+				target->write(":" + u->nickname() + " MODE " + channel->name() + " +o " + target->nickname());
+					if (u != target)
+				u->write(":" + u->nickname() + " MODE " + channel->name() + " +o " + target->nickname());
 			}
 		}
 
 		if (mask & isINVITED) {
 			if (mask & isMINUS) {
-				// std::cout << "invite only false" << std::endl;
 				channel->setInviteOnly(false);
-			}
-			else {
-				// std::cout << "invite only true" << std::endl;
-				channel->setInviteOnly(true);
+				channel->broadcast2(":" + u->nickname() + " MODE " + channel->name() + " -i");
+			} else {
+				channel->setInviteOnly(true); 
+				channel->broadcast2(":" + u->nickname() + " MODE " + channel->name() + " +i");
 			}
 		}
-
-		if (mask & isLIMIT) {
-			if (mask & isMINUS)
+		if (limit != -1 && mask & isLIMIT) {
+			if (mask & isMINUS) {
 				channel->setMaxUsers(99);
-				// channel->setIsMaxUsers(false);
-			else {
+				channel->broadcast2(":" + u->nickname() + " MODE " + channel->name() + " -l");
+			} else {
 				channel->setMaxUsers(limit);
-				// channel->setIsMaxUsers(true);
+				channel->broadcast2(":" + u->nickname() + " MODE " + channel->name() + " +l " + l);
 			}
 		}
-
-		if (msg.args().size() > 3) {
-			target->write(":" + u->nickname() + " MODE " + channel->name() + " " + mode + " " + target->nickname());
-			if (u != target)
-				u->write(":" + u->nickname() + " MODE " + channel->name() + " " + mode + " " + target->nickname());
-		}
 	}
-	else {
-		u->reply(*u, ERR_CHANOPRIVSNEEDED(u->nickname(), channel->name()));
-	}
+	else { u->reply(*u, ERR_CHANOPRIVSNEEDED(u->nickname(), channel->name())); }
 }
 
 void	IrcServer::_userMODE(User *u, Message msg, User *target) {
 
-	std::string mode = msg.args()[1];
-
-	// if (msg.args().size() < 3)
-	// {
-	// 	u->reply(*u, RPL_UMODEIS(u->nickname(), mode));
-	// 	return ;
-	// }
-	if (u != target)
-	{
+	if (msg.args().size() == 2 && msg.args()[1] == "+i")
+		return;
+	if (u != target) {
 		u->reply(*u, ERR_USERSDONTMATCH(u->nickname()));
 		return ;
 	}
 	if (u->isOperator()) {
-
-		if (mode == "-o") {
+		if (msg.args()[1] == "-o")
 			u->setOperator(false);
-		}
-		else if (mode == "+o") {
-			// std::cout << "tentative ignoree" << std::endl;
+		else if (msg.args()[1] == "+o")
 			return ;
-		}
 		else {
-			u->reply(*u, ERR_UMODEUNKNOWNFLAG(u->nickname(), mode));
+			u->reply(*u, ERR_UMODEUNKNOWNFLAG(u->nickname(), msg.args()[1]));
 			return ;
 		}
-		u->reply(*u, ":" + u->getPrefix() + " MODE " + u->nickname() + " " + mode);
-	}
-	else
+		u->reply(*u, ":" + u->getPrefix() + " MODE " + u->nickname() + " " + msg.args()[1]);
+	} else {
 		u->reply(*u, ERR_NOPRIVILEGES(u->nickname()));
+	}
 }
 
 int		IrcServer::MODE(User &u, Message msg) {
-
-	/* channel MODE */
 	if (msg.args()[0][0] == '#') {
-
-		// std::cout << "COUOCUCOUC " << std::endl;
-
 		Channel *channel = _network.getChannel(msg.args()[0]);
 		if (!channel)
 			return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
-		_channelMODE(&u, msg, channel); // check le return
-	}
-
-	/* user MODE */
-	else {
-
-		// std::cout << "user MODE lol" << std::endl;
+		_channelMODE(&u, msg, channel);
+	} else {
 		User *target = _network.getByNickname(msg.args()[0]);
 		if (!target)
 			return u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[0]));
 		_userMODE(&u, msg, target);
 	}
-
 	return (1);
 }
