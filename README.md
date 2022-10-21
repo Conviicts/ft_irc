@@ -22,9 +22,9 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 - [x] un username
 - [x] rejoindre un channel
 - [x] envoyer et recevoir des messages privés
-- [ ] Tous les messages envoyés par un client dans un channel doivent être transmis à tous les clients ayant rejoint ce channel
-- [ ] operators et des utilisateurs basiques
-- [ ] implémenter les commandes spécifiques aux operators
+- [x] Tous les messages envoyés par un client dans un channel doivent être transmis à tous les clients ayant rejoint ce channel
+- [x] operators et des utilisateurs basiques
+- [x] implémenter les commandes spécifiques aux operators
 - [ ] `ctrl+D` pour envoyer la commande en plusieurs parties
 
 ### Commandes
@@ -55,11 +55,9 @@ L’objectif est de reproduire le fonctionnement d’un serveur IRC en C++ en ut
 
 - [x] `o` operator (user)
 
-- [ ] `o` operator (de channel)
-- [ ] `i` sur invitation (channel)
-- [ ] `l` limite / max size (channel)
-- [ ] `k` cle / mdp pour join le channel (channel)
-- [ ] `b` masque de bannissement / users banni pour join un channel (channel)
+- [x] `o` operator (de channel)
+- [x] `i` sur invitation (channel)
+- [x] `l` limite / max size (channel)
 
 ## 1. Le sujet 🌱
 

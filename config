@@ -6,6 +6,7 @@ servers = (
     use_tls = "no";
     tls_verify = "no";
     password = "test";
+    no_cap = "yes";
   }
 );
 
