@@ -1,5 +1,4 @@
 #include "Network.hpp"
-#include <iostream>
 
 Network::Network() { }
 
@@ -7,8 +6,8 @@ Network::~Network() throw() { clear(); }
 
 void						Network::add(User *user) {
 	_connections[user->socket()] = user;
-	if (user->nickname().size())
-		_users[user->nickname()] = user;
+	std::cout << user->socket()->ip() << std::endl;
+	_users[user->nickname().size() ? user->nickname() : itoa(user->socket()->fd())] = user;
 }
 
 void						Network::add(Channel *channel) {
@@ -18,7 +17,7 @@ void						Network::add(Channel *channel) {
 void						Network::remove(User *user) throw() {
 	if (!user->count())
 		_connections.erase(user->socket());
-	_users.erase(user->nickname());
+	_users.erase(user->nickname().size() ? user->nickname() : itoa(user->socket()->fd()));
 }
 
 void						Network::remove(const Channel *channel) throw() {

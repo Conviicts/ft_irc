@@ -211,16 +211,20 @@ void	IrcServer::_userMODE(User *u, Message msg, User *target) {
 }
 
 int		IrcServer::MODE(User &u, Message msg) {
-	if (msg.args()[0][0] == '#') {
-		Channel *channel = _network.getChannel(msg.args()[0]);
-		if (!channel)
-			return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
-		_channelMODE(&u, msg, channel);
-	} else {
-		User *target = _network.getByNickname(msg.args()[0]);
-		if (!target)
-			return u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[0]));
-		_userMODE(&u, msg, target);
+
+	if (msg.args().size() > 1) {
+
+		if (msg.args()[0][0] == '#') {
+			Channel *channel = _network.getChannel(msg.args()[0]);
+			if (!channel)
+				return u.reply(u, ERR_NOSUCHCHANNEL(u.nickname(), msg.args()[0]));
+			_channelMODE(&u, msg, channel);
+		} else {
+			User *target = _network.getByNickname(msg.args()[0]);
+			if (!target)
+				return u.reply(u, ERR_NOSUCHNICK(u.nickname(), msg.args()[0]));
+			_userMODE(&u, msg, target);
+		}
 	}
 	return (1);
 }

@@ -31,7 +31,6 @@
 std::vector<std::string>	split(const std::string &str, char delim);
 
 int		IrcServer::NAMES(User &u, Message msg) {
-	std::cout << "NAMES" << std::endl;	
 	if (u.state() != 2)
 		return (u.reply(u, ERR_NOTREGISTERED(u.nickname())));
 	if (msg.args().size() < 1)
@@ -46,7 +45,7 @@ int		IrcServer::NAMES(User &u, Message msg) {
 					if ((*it).second.isChanOP())
 						users += "@" + (*it).first->nickname() + " ";
 					else
-						users += "+" + (*it).first->nickname() + " ";
+						users += (*it).first->nickname() + " ";
 				}
 				u.reply(u, RPL_NAMREPLY(u.getPrefix(), u.nickname(), channel->name(), users));
 

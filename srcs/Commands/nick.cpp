@@ -21,8 +21,10 @@ int		IrcServer::NICK(User &u, Message msg) {
 		return u.reply(u, ERR_NONICKNAMEGIVEN(u.nickname()));
 	if (!checkNickname(msg.args()[0]))
 		return u.reply(u, ERR_ERRONEUSNICKNAME(u.nickname(), msg.args()[0]));
-	if (_network.getByNickname(msg.args()[0]))
-		return u.reply(u, ERR_NICKNAMEINUSE(u.nickname()));
+	if (_network.getByNickname(msg.args()[0])) {
+		u.reply(u, ERR_NICKNAMEINUSE(u.nickname()));
+		return 0;
+	}
 	_network.remove(&u);
 	u.setNickname(msg.args()[0]);
 	_network.add(&u);

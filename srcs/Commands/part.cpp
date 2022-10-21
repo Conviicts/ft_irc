@@ -3,7 +3,9 @@
 // Commande: PART
 // Paramètres: <canal>{,< canal >}
 
-// Le message PART provoque le retrait du client expéditeur de la liste des utilisateurs actifs pour tous les canaux listés dans la chaîne de paramètres.
+// Le message PART provoque le retrait du client expéditeur
+// de la liste des utilisateurs actifs pour tous les canaux
+// listés dans la chaîne de paramètres.
 
 // Réponses numériques:
 
@@ -33,7 +35,6 @@ int		IrcServer::PART(User &u, Message msg) {
 			u.reply(u, ERR_NOTONCHANNEL(u.nickname(), *it));
 			continue ;
 		}
-		std::cout << ":" + u.getPrefix() + " PART " + channel->name() + " :Leaving" << std::endl;
 		channel->broadcast2(":" + u.getPrefix() + " PART " + channel->name() + " :Leaving");
 		channel->delUser(&u);
 		if (channel->clientSize() == 0)

@@ -100,7 +100,7 @@ void                IrcServer::execute(TCP::BasicConnection *c, Message message)
         std::cout << std::endl;
         return ;
     }
-    std::cout << "COMMAND:\t" << message.command();
+    std::cout << "COMMAND:\t" << user.nickname() << ":\t" << message.command();
     for (std::vector<std::string>::const_iterator it = message.args().begin(); it != message.args().end(); ++it)
         std::cout << " " << *it;
     std::cout << std::endl;

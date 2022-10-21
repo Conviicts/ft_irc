@@ -52,7 +52,6 @@ void					User::welcome(User &u) {
 		return ;
 	_state = 2;
 	reply(u, RPL_WELCOME(_nickname));
-	// std::cout << u.socket()->host() << " is not known as " << _nickname << std::endl;
 }
 
 std::string				User::getResponse(User &u, std::string const &reponse) {
@@ -72,7 +71,7 @@ void					User::joinChannel(User &u, Channel *channel, bool chanOp) {
 		if (chanOp)
 			users += "@" + *it + " ";
 		else
-			users += "+" + *it + " ";
+			users += *it + " ";
 	}
 	u.reply(u, RPL_NAMREPLY(u.getPrefix(), u.nickname(), channel->name(), users));
 	u.reply(u, RPL_ENDOFNAMES(u.getPrefix(), u.nickname(), channel->name()));

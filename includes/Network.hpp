@@ -4,11 +4,20 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <iostream>
+#include <sstream>
 
 #include "TCPServer.hpp"
 #include "BasicConnection.hpp"
 #include "User.hpp"
 #include "Channel.hpp"
+
+template <typename T>
+std::string itoa(T nb) {
+	std::ostringstream ss;
+	ss << nb;
+	return ss.str();
+}
 
 class Network {
     public:

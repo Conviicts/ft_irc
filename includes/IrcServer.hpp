@@ -35,6 +35,7 @@ class IrcServer {
 		int				WHO(User &u, Message msg);
 		int				KILL(User &u, Message msg);
 		int				PING(User &u, Message msg);
+		int				HELP(User &u, Message msg);
 
 		void			listen(const std::string &port, size_t maxQueueLen = 5);
 		void			run(); // Run the server

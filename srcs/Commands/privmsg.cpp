@@ -13,6 +13,7 @@ int		IrcServer::PRIVMSG(User &u, Message msg) {
 	for (std::vector<std::string>::const_iterator it = msg.args().begin() + 1; it != msg.args().end(); it++)
 		message.append(*it + " ");
 	message = message.at(0) == ':' ? message.substr(1) : message;
+	message = message.at(message.size() - 1) == ' ' ? message.substr(0, message.size() - 1) : message;
 	
 	std::vector<std::string> targets = split(msg.args()[0], ',');
 	for (std::vector<std::string>::const_iterator it = targets.begin(); it != targets.end(); it++) {
