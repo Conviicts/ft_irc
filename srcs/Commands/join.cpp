@@ -33,7 +33,6 @@ int		IrcServer::JOIN(User &u, Message msg) {
 			_network.add(c);
 			newChan = 1;
 		} else if (c->getUser(&u)) {
-			std::cout << "User already in channel" << std::endl;
 			continue ;
 		} else {
 			bool isInvited = c->isInvited(u);

@@ -6,7 +6,6 @@ Network::~Network() throw() { clear(); }
 
 void						Network::add(User *user) {
 	_connections[user->socket()] = user;
-	std::cout << user->socket()->ip() << std::endl;
 	_users[user->nickname().size() ? user->nickname() : itoa(user->socket()->fd())] = user;
 }
 

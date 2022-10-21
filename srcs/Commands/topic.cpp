@@ -39,8 +39,6 @@ int		IrcServer::TOPIC(User &u, Message msg) {
 		message = message.at(0) == ':' ? message.substr(1) : message;
 		channel->setTopic(message);
 		channel->broadcast2(":" + u.getPrefix() + " TOPIC " + msg.args()[0] + " :" + message);
-		
-		std::cout << channel->getTopic() << std::endl;
 	} else if (msg.args().size() == 1) {
 		if (channel->getTopic().empty())
 			return u.reply(u, RPL_NOTOPIC(u.nickname(), msg.args()[0]));

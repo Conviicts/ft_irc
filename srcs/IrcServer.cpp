@@ -33,6 +33,25 @@ IrcServer::~IrcServer() { }
 
 IrcServer::State    IrcServer::state() const { return _state; }
 
+void                IrcServer::logger(int type, const std::string msg, const std::string user = "", std::vector<std::string> args = std::vector<std::string>()) {
+
+    const time_t t = time(NULL);
+    char buff[256];
+    strftime(buff, 256, "%d-%m-%Y %H:%M:%S", localtime(&t));
+    std::cout << "\033[1;31m" << buff << std::setw(5) << "\033[0m ";
+    if (type == 1)
+        std::cout << "\033[1;32m" << "[SERVER]:" << "\033[0m " << msg;
+    else if (type == 2) {
+        std::cout << "\033[1;33m" << "[MESSAGE]:" << "\033[0m ";
+        std::cout << "[";
+        std::cout << std::setw(10) << user;
+        std::cout << "] " << msg;
+        for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it)
+            std::cout << " " << *it;
+    }
+    std::cout << std::endl;
+}
+
 void                IrcServer::run() {
     std::cout << "------------------------------------------------     " << std::endl;
     std::cout << "______________________ .______________________       " << std::endl;
@@ -42,7 +61,7 @@ void                IrcServer::run() {
     std::cout << " \\___  /     |____|____|___||____|_  /\\______  /   " << std::endl;
     std::cout << "     \\/          /_____/           \\/        \\/   " << std::endl;
     std::cout << "------------------------------------------------     " << std::endl;
-    std::cout << "Server started on port: " << _port << std::endl;
+    logger(1, "Listening on port " + _port);
     if (!_init) {
         _server.listen(_port);
         _server.setMaxConnections(20);
@@ -59,7 +78,7 @@ void                IrcServer::run() {
         TCP::TCPSocket *newSocket;
         while ((newSocket = _server.getNextNewConnection())) {
             User *u = new User(newSocket);
-            std::cout << "New client connected: " << newSocket->host() << std::endl;
+            logger(1, "New client connected: " + newSocket->host());
             _network.add(u);
         }
         TCP::TCPSocket *socket;
@@ -94,16 +113,10 @@ void                IrcServer::execute(TCP::BasicConnection *c, Message message)
 	User &user = *static_cast<User*>(c);
 	userCommands::const_iterator i = _userCommands.find(message.command());
 	if (i == _userCommands.end()) {
-		std::cout << "UNKNOW COMMAND:\t" << message.command();
-        for (std::vector<std::string>::const_iterator it = message.args().begin(); it != message.args().end(); ++it)
-            std::cout << " " << *it;
-        std::cout << std::endl;
+        logger(1, "UNKNOW COMMAND: " + message.command());
         return ;
     }
-    std::cout << "COMMAND:\t" << user.nickname() << ":\t" << message.command();
-    for (std::vector<std::string>::const_iterator it = message.args().begin(); it != message.args().end(); ++it)
-        std::cout << " " << *it;
-    std::cout << std::endl;
+    logger(2, message.command(), user.nickname().size() ? user.nickname() : "*", message.args());
 	(this->*(i->second))(user, message);
 }
 
@@ -141,14 +154,13 @@ void                IrcServer::disconnect(User &user, const std::string &reason,
             }
         }
     }
-    std::cout << "Disconnected: " << user.socket()->ip() << " fd: " << user.socket()->fd();
+    logger(1, "Disconnected: " + user.socket()->ip() + " fd: " + itoa(user.socket()->fd()));        
     if (notifyUser) {
-        std::cout << "\n\tReason: " << reason;
+        logger(1, "Reason: " + reason);        
         std::string quit_reason;
         quit_reason =  reason.empty() ? "(Client Quit) ": reason;
         user.write(quit_reason);
     }
-    std::cout << std::endl;
     _network.remove(&user);
 	_network.newZombie(&user);
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
+#include <fstream>
 
 #include "TCPServer.hpp"
 #include "User.hpp"
@@ -44,6 +46,8 @@ class IrcServer {
 
 		State			state() const; // get the server state
 
+		void			logger(int type, const std::string msg, const std::string user, std::vector<std::string> args);
+
 		class UserNotFoundException : public std::exception { // est-ce que je suis capable ?
 			public:
 				virtual const char * what() const throw() {
@@ -71,7 +75,6 @@ class IrcServer {
 		Network			_network;
 
 		userCommands	_userCommands;
-
 
 		void			execute(TCP::BasicConnection *c, Message message);
 

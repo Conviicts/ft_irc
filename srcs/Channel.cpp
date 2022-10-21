@@ -61,7 +61,6 @@ void						Channel::broadcast2(const std::string &msg) {
 void						Channel::kick(User *user, User *target, const std::string &reason) {
 	broadcast(user, ":" + user->nickname() + " KICK " + _name + " " + target->nickname() + " :" + reason);
 	delUser(target);
-	// std::cout << user->nickname() << "kicked" << target->nickname() << "from channel " << _name << std::endl;
 }
 
 int							Channel::clientSize() const { return _users.size(); }
