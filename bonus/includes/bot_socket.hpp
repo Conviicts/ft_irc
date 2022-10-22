@@ -24,9 +24,9 @@ class bot {
 												bot();
 												~bot();
 					int							cnct(const char *hostname, uint16_t port);
-					void						client_on(const char *hostname, uint16_t port, const char *channel, const char *nick);
-					void						scan();
-					void						game();
+					int							client_on(const char *hostname, uint16_t port, const char *nick);
+					void						scan(char **argv);
+					void						game(const char *channel);
 					int							dscnct(void);
 					int							fd(void) const;
 					int							in(void);
